@@ -5,8 +5,11 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.db.models import Sum
-from POS_APP.models import Transaction
+from POS_APP.models import Transaction, TransactionItem, Product
 from datetime import datetime
+import json
+from decimal import Decimal
+import decimal
 
 
 def register(request):
@@ -53,6 +56,14 @@ def custom_logout(request):
 @login_required
 def sales_summary(request):
     selected_year = request.GET.get('select_year', datetime.now().year)
+    selected_date_str = request.GET.get('selected-date')
+    daily_total_sales = 0
+    products_sold_today = []
+    top_products_labels = []
+    top_products_values = []
+    monthly_sales = {}
+    top_yearly_products_labels = []
+    top_yearly_products_values = []
 
     # Validate the selected year
     try:
@@ -60,50 +71,98 @@ def sales_summary(request):
     except ValueError:
         selected_year = datetime.now().year
 
-    # Monthly summary for the selected year
-    monthly_transactions = Transaction.objects.filter(date__year=selected_year)
-    monthly_sales = {}
+    # Daily Sales Summary
+    if selected_date_str:
+        try:
+            selected_date = datetime.strptime(selected_date_str, "%Y-%m-%d").date()
+            
+            # Filter transactions for the selected date
+            daily_transactions = Transaction.objects.filter(date__date=selected_date)
+            daily_total_sales = daily_transactions.aggregate(Sum('total_price'))['total_price__sum'] or decimal.Decimal(0)
+            
+            # Get all transaction items for the selected day
+            transaction_items = TransactionItem.objects.filter(transaction__date__date=selected_date)
 
+            # Product-wise summary
+            products_summary = {}
+            for item in transaction_items:
+                product_name = item.product.name
+                if product_name in products_summary:
+                    products_summary[product_name]['quantity_sold'] += item.quantity_sold
+                    products_summary[product_name]['total_price'] += item.get_total_price()
+                else:
+                    products_summary[product_name] = {
+                        'quantity_sold': item.quantity_sold,
+                        'total_price': item.get_total_price()
+                    }
+            
+            # Prepare product summary for template
+            products_sold_today = [
+                {
+                    'name': product,
+                    'quantity_sold': details['quantity_sold'],
+                    'total_price': float(details['total_price'])  # Convert Decimal to float
+                }
+                for product, details in products_summary.items()
+            ]
+
+            # Top 5 Products Sold Today
+            sorted_products = sorted(products_summary.items(), key=lambda x: x[1]['quantity_sold'], reverse=True)[:5]
+            top_products_labels = [product for product, _ in sorted_products]
+            top_products_values = [details['quantity_sold'] for _, details in sorted_products]
+
+        except ValueError as e:
+            print("Error:", e)
+
+    # Monthly Sales Summary for the Selected Year
+    monthly_transactions = Transaction.objects.filter(date__year=selected_year)
     for transaction in monthly_transactions:
         if transaction.total_price is None:
             continue
-
         month = transaction.date.strftime("%B")
         if month not in monthly_sales:
-            monthly_sales[month] = 0
-
+            monthly_sales[month] = decimal.Decimal(0)
         monthly_sales[month] += transaction.total_price
 
-    # Prepare data for Chart.js
     monthly_sales_labels = list(monthly_sales.keys())
-    monthly_sales_values = list(monthly_sales.values())
+    monthly_sales_values = [float(value) for value in monthly_sales.values()]  # Convert Decimal to float
 
     # Calculate total and average sales for the year
     total_sales = sum(monthly_sales_values)
     average_total_sales = total_sales / 12 if total_sales > 0 else 0
 
-    # Daily sales summary
-    selected_date_str = request.GET.get('selected-date')
-    daily_total_sales = 0
+    # Top 5 Products Sold in the Year
+    yearly_transaction_items = TransactionItem.objects.filter(transaction__date__year=selected_year)
+    yearly_products_summary = {}
+    for item in yearly_transaction_items:
+        product_name = item.product.name
+        if product_name in yearly_products_summary:
+            yearly_products_summary[product_name]['quantity_sold'] += item.quantity_sold
+        else:
+            yearly_products_summary[product_name] = {
+                'quantity_sold': item.quantity_sold,
+            }
 
-    if selected_date_str:
-        try:
-            selected_date = datetime.strptime(selected_date_str, "%Y-%m-%d").date()
-            daily_transactions = Transaction.objects.filter(date__date=selected_date)
-            daily_total_sales = daily_transactions.aggregate(Sum('total_price'))['total_price__sum'] or 0
-        except ValueError:
-            pass
+    # Prepare top 5 products for the year
+    sorted_yearly_products = sorted(yearly_products_summary.items(), key=lambda x: x[1]['quantity_sold'], reverse=True)[:5]
+    top_yearly_products_labels = [product for product, _ in sorted_yearly_products]
+    top_yearly_products_values = [details['quantity_sold'] for _, details in sorted_yearly_products]
 
-    # Prepare the context for the template
+    # Prepare context for template
     context = {
-        'monthly_sales': monthly_sales,
-        'monthly_sales_labels': monthly_sales_labels,
-        'monthly_sales_values': monthly_sales_values,
-        'total_sales': total_sales,
-        'average_total_sales': average_total_sales,
+        'daily_total_sales': float(daily_total_sales),  # Convert Decimal to float
+        'average_daily_sales': float(daily_total_sales) / sum(product['quantity_sold'] for product in products_sold_today) if products_sold_today else 0,
+        'selected_date': selected_date_str,
+        'products_sold_today': products_sold_today,
+        'top_products_labels_json': json.dumps(top_products_labels),
+        'top_products_values_json': json.dumps(top_products_values),
+        'monthly_sales_labels': json.dumps(monthly_sales_labels),
+        'monthly_sales_values': json.dumps(monthly_sales_values),
+        'total_sales': float(total_sales),  # Convert Decimal to float
+        'average_total_sales': float(average_total_sales),  # Convert Decimal to float
         'current_year': selected_year,
-        'daily_total_sales': daily_total_sales,
-        'average_daily_sales': 0,  # Update this if you need daily average logic
+        'top_yearly_products_labels_json': json.dumps(top_yearly_products_labels),
+        'top_yearly_products_values_json': json.dumps(top_yearly_products_values),
     }
 
     return render(request, 'MGSariSari_Inventory/sales.html', context)
