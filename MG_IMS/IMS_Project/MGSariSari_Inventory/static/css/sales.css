@@ -1,0 +1,100 @@
+/* sales.css */
+
+/* Sales Summary Tab Styling */
+.sales-tabs {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.sales-tabs button {
+    background-color: #f1f1f1;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+}
+
+.sales-tabs button:hover {
+    background-color: #1BA487;
+    color: white;
+}
+
+/* Hidden class for the tabs */
+.hidden {
+    display: none;
+}
+
+/* Sales Detail Section */
+.sales-details {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.daily-sales,
+.average-daily-sales {
+    flex: 1;
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* Chart Container Styling */
+.chart-container {
+    margin-top: 30px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Sales Table */
+.sales-table {
+    margin-top: 20px;
+}
+
+.sales-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sales-table th,
+.sales-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+/* Monthly Summary */
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.monthly-chart {
+    margin-top: 30px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.monthly-table {
+    margin-top: 20px;
+}
+
+.monthly-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.monthly-table th,
+.monthly-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}

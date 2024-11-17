@@ -110,3 +110,7 @@ def remove_from_cart(request):
 def clear_cart(request):
     request.session['cart'] = []
     return JsonResponse({"success": True})
+
+def transactions(request):
+    # Add your logic here for processing the transactions
+    return render(request, 'pos/transactions.html')

@@ -1,0 +1,120 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% block title %}Sales Summary - Inventory Management System{% endblock %}
+
+{% block content %}
+    <style>
+        .sales-tabs button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sales-tabs button.active {
+            background-color: #1BA487; /* Highlight color for active button */
+            color: white;
+        }
+
+        .sales-summary {
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .chart-container {
+            margin-top: 20px;
+        }
+    </style>
+
+    <h3 class="dashboard-header">Sales</h3>
+
+    <!-- Tabs for Daily and Monthly Summary -->
+    <div class="sales-tabs">
+        <button id="daily-summary-btn" class="active" onclick="showDailySummary()">Daily Sales Summary</button>
+        <button id="monthly-summary-btn" onclick="showMonthlySummary()">Monthly Sales Summary</button>
+    </div>
+
+    <!-- Daily Sales Summary Section -->
+    <div id="daily-summary" class="sales-summary">
+        <div class="date-picker">
+            <h3>Select Date:</h3>
+            <form method="get">
+                <input type="date" id="selected-date" name="selected-date" value="{{ selected_date|default:'' }}">
+                <button type="submit">Show Sales</button>
+            </form>
+        </div>
+        <div class="sales-details">
+            <div class="daily-sales">
+                <h4>Total Sales Today</h4>
+                <p>P{{ daily_total_sales|floatformat:2 }}</p>
+            </div>
+            <div class="average-daily-sales">
+                <h4>Average Daily Sale</h4>
+                <p>P{{ average_daily_sales|floatformat:2 }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Sales Summary Section -->
+    <div id="monthly-summary" class="sales-summary hidden">
+        <div class="summary-header">
+            <div class="year-selector">
+                <form method="get">
+                    <label for="select-year">Select Year:</label>
+                    <input type="number" id="select-year" name="select_year" min="2000" max="2100" value="{{ current_year }}">
+                    <button type="submit">Show Year</button>
+                </form>
+            </div>
+            <div class="total-sales">
+                <h4>Total Sales: P{{ total_sales|floatformat:2 }}</h4>
+            </div>
+            <div class="average-total-sales">
+                <h4>Average Total Sales: P{{ average_total_sales|floatformat:2 }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // JavaScript for Switching Tabs
+            document.getElementById("daily-summary-btn").addEventListener("click", function() {
+                showDailySummary();
+                localStorage.setItem('activeTab', 'daily');
+            });
+
+            document.getElementById("monthly-summary-btn").addEventListener("click", function() {
+                showMonthlySummary();
+                localStorage.setItem('activeTab', 'monthly');
+            });
+
+            function showDailySummary() {
+                document.getElementById("daily-summary").classList.remove("hidden");
+                document.getElementById("monthly-summary").classList.add("hidden");
+                document.getElementById("daily-summary-btn").classList.add("active");
+                document.getElementById("monthly-summary-btn").classList.remove("active");
+            }
+
+            function showMonthlySummary() {
+                document.getElementById("monthly-summary").classList.remove("hidden");
+                document.getElementById("daily-summary").classList.add("hidden");
+                document.getElementById("monthly-summary-btn").classList.add("active");
+                document.getElementById("daily-summary-btn").classList.remove("active");
+            }
+
+            // Check for active tab from localStorage
+            const activeTab = localStorage.getItem('activeTab');
+            if (activeTab === 'monthly') {
+                showMonthlySummary();
+            } else {
+                showDailySummary();  // Default to daily summary
+            }
+        });
+    </script>
+{% endblock %}
