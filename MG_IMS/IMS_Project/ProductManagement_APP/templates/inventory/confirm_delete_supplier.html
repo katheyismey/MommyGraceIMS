@@ -1,0 +1,14 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% block title %}Confirm Supplier Deletion{% endblock %}
+{% block header %}Delete Supplier{% endblock %}
+
+{% block content %}
+    <h2>Are you sure you want to delete the supplier: {{ supplier.supplier_name }}?</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="button delete">Delete</button>
+        <a href="{% url 'ProductManagement_APP:inventory_list' %}" class="button cancel">Cancel</a>
+    </form>
+{% endblock %}

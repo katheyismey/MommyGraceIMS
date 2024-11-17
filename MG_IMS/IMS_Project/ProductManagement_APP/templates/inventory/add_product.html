@@ -1,0 +1,19 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% block title %}Add Product{% endblock %}
+{% block header %}Add New Product{% endblock %}
+
+{% block content %}
+    <h2>Add Product</h2>
+    <form method="POST" class="form">
+        {% csrf_token %}
+        
+        <!-- Product Form -->
+        <h3>Product Details</h3>
+        {{ product_form.as_p }}
+        
+        <!-- Submit and Cancel buttons -->
+        <button type="submit" class="button save">Save</button>
+        <a href="{% url 'ProductManagement_APP:inventory_list' %}" class="button cancel">Cancel</a>
+    </form>
+{% endblock %}

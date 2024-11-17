@@ -9,6 +9,8 @@
     <!-- Existing Stylesheets -->
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'css/sales.css' %}">
+    <link rel="stylesheet" href="{% static 'inventory/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'inventory/inventory.css' %}">
 
     <!-- Allow child templates to inject additional head elements -->
     {% block head %}{% endblock %}
@@ -132,7 +134,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="{% url 'inventory' %}">
+                    <a href="{% url 'ProductManagement_APP:inventory_list' %}">
                         <img src="{% static 'icons/inventory.png' %}" alt="Inventory Icon" style="width: 20px; height: 20px;">
                         Inventory
                     </a>

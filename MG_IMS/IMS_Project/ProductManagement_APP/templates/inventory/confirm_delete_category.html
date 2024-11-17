@@ -1,0 +1,13 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% block title %}Delete Category{% endblock %}
+{% block header %}Delete Category{% endblock %}
+
+{% block content %}
+    <h2>Are you sure you want to delete the category {{ category.name }}?</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="button delete">Yes, Delete</button>
+        <a href="{% url 'ProductManagement_APP:inventory_list' %}" class="button cancel">Cancel</a>
+    </form>
+{% endblock %}
