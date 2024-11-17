@@ -81,7 +81,7 @@
             <span class="total-value">₱<span id="total">{{ total }}</span></span>
         </div>        
 
-        <form method="post" action="{% url 'complete_transaction' %}">
+        <form method="post" action="{% url 'POS_APP:complete_transaction' %}">
             {% csrf_token %}
             <button type="button" class="cancel-transaction-button" onclick="clearCart()">Cancel Transaction</button>
             <button type="submit" class="complete-transaction-button">Complete Transaction</button>

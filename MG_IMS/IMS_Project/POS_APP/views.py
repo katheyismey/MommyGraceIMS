@@ -31,7 +31,7 @@ def pos_view(request):
 
             request.session['cart'] = cart  # Save cart back to session
             messages.success(request, f"Added {quantity} of {product.name} to the cart.")
-            return redirect("pos")
+            return redirect('POS_APP:pos')
         else:
             messages.error(request, "Please select a product and enter a quantity.")
 
@@ -46,7 +46,7 @@ def complete_transaction(request):
     cart = request.session.get('cart', [])
     if not cart:
         messages.error(request, "Your cart is empty.")
-        return redirect("pos")
+        return redirect('POS_APP:pos')
 
     # Create a new transaction and add items
     transaction = Transaction.objects.create()
@@ -60,7 +60,7 @@ def complete_transaction(request):
     # Clear the cart
     request.session['cart'] = []
     messages.success(request, "Transaction completed successfully.")
-    return redirect("pos")
+    return redirect('POS_APP:pos')
 
 def search_products(request):
     query = request.GET.get('q', '')
@@ -110,7 +110,3 @@ def remove_from_cart(request):
 def clear_cart(request):
     request.session['cart'] = []
     return JsonResponse({"success": True})
-
-def pos(request):
-    # Render the POS HTML template
-    return render(request, 'pos/pos.html')
