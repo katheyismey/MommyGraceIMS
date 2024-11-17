@@ -5,8 +5,9 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.db.models import Sum
-from .models import Transaction
+from POS_APP.models import Transaction
 from datetime import datetime
+
 
 def register(request):
     if request.user.is_authenticated:
@@ -122,3 +123,4 @@ def debts(request):
 @login_required
 def expenses(request):
     return render(request, 'MGSariSari_Inventory/expenses.html')
+
