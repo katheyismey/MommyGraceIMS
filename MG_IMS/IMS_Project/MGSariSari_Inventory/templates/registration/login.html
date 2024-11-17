@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mommy Grace Sari-Sari Store</title>
+    <style>
+        /* Basic styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .login-container {
+            width: 800px;
+            height: auto;
+            display: flex;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px; /* Adding some border radius for a smoother look */
+        }
+
+        .login-left {
+            background-color: #1BA487;
+            color: white;
+            width: 40%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px; /* Ensure left side also has border radius */
+        }
+
+        .login-left h1 {
+            font-size: 24px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .login-left img {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+        }
+
+        .login-right {
+            background-color: white;
+            width: 60%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px; /* Ensure right side also has border radius */
+        }
+
+        .login-right h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-right form {
+            width: 100%;
+        }
+
+        .login-right input[type="text"],
+        .login-right input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .login-right input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .login-right input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        .login-right a {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .login-right a:hover {
+            text-decoration: underline;
+        }
+
+        .error-messages {
+            color: red;
+            background-color: #ffe6e6;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: left; /* Left align error messages */
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-left">
+            <img src="{% static 'icons/store_icon.png' %}" alt="Store Icon"> <!-- Image size has been increased -->
+            <h1>MOMMY GRACE <br>SARI-SARI STORE</h1>
+        </div>
+        <div class="login-right">
+            <h2>Login into your account</h2>
+
+            <!-- Displaying error messages similar to register.html -->
+            {% if form.errors %}
+                <div class="error-messages">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Displaying form -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_username">Username:</label>
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    <label for="id_password">Password:</label>
+                    {{ form.password }}
+                </div>
+                <input type="submit" value="Sign In">
+            </form>
+
+            <!-- Links for password reset and registration -->
+            <a href="{% url 'register' %}" class="register-link">No account? Register here</a>
+        </div>
+    </div>
+</body>
+</html>

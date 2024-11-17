@@ -110,3 +110,7 @@ def remove_from_cart(request):
 def clear_cart(request):
     request.session['cart'] = []
     return JsonResponse({"success": True})
+
+def pos(request):
+    # Render the POS HTML template
+    return render(request, 'pos/pos.html')

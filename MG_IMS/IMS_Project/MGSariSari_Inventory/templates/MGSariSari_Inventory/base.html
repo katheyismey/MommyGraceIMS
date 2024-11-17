@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Inventory Management System{% endblock %}</title>
+
+    <!-- Existing Stylesheets -->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sales.css' %}">
+
+    <!-- Allow child templates to inject additional head elements -->
+    {% block head %}{% endblock %}
+
+    <style>
+        /* Global styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        /* Header styling */
+        .header {
+            background-color: #1AA488;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .header .nav-left img {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .header .nav-center {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .header .nav-right img {
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 250px;
+            background-color: #192227;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 65px; /* Adjusted to align with the fixed header */
+            left: 0;
+            padding-top: 25px;
+            font-size: 16px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 10px 20px;
+            color: white;
+        }
+
+        .menu-item a {
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item a:hover {
+            color: #f1f1f1;
+        }
+
+        /* Main content styling */
+        .content {
+            margin-left: 270px;
+            padding-top: 30px; /* Account for fixed header */
+        }
+
+        /* Additional styles for forms, tables, buttons, etc. can go here */
+    </style>
+</head>
+<body>
+
+    <!-- Combined Header -->
+    <div class="header">
+        <div class="nav-left">
+            <img src="{% static 'icons/menu.png' %}" alt="Menu Icon" class="menu-icon">
+        </div>
+        <div class="nav-center">
+            Inventory Management System
+        </div>
+        <div class="nav-right">
+            <img src="{% static 'icons/profile.png' %}" alt="Profile Icon" class="profile-icon">
+            <div class="profile-dropdown">
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="{% url 'dashboard' %}">
+                        <img src="{% static 'icons/dashboard.png' %}" alt="Dashboard Icon" style="width: 20px; height: 20px;">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'inventory' %}">
+                        <img src="{% static 'icons/inventory.png' %}" alt="Inventory Icon" style="width: 20px; height: 20px;">
+                        Inventory
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'transactions' %}">
+                        <img src="{% static 'icons/transactions.png' %}" alt="Transactions Icon" style="width: 20px; height: 20px;">
+                        Transactions
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'sales' %}">
+                        <img src="{% static 'icons/sales.png' %}" alt="Sales Icon" style="width: 20px; height: 20px;">
+                        Sales
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'debts' %}">
+                        <img src="{% static 'icons/debts.png' %}" alt="Debts Icon" style="width: 20px; height: 20px;">
+                        Debts
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'expenses' %}">
+                        <img src="{% static 'icons/expenses.png' %}" alt="Expenses Icon" style="width: 20px; height: 20px;">
+                        Expenses
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content Area-->
+        <div class="main-content content container">
+            {% block content %}{% endblock %}
+        </div> 
+    </div>
+
+    <!-- JavaScript for Profile Dropdown -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const profileIcon = document.querySelector(".profile-icon");
+            const dropdown = document.querySelector(".profile-dropdown");
+
+            profileIcon.addEventListener("click", function(event) {
+                event.stopPropagation();
+                dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+            });
+
+            document.addEventListener("click", function() {
+                dropdown.style.display = "none";
+            });
+        });
+    </script>
+</body>
+</html>
