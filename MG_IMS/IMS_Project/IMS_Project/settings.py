@@ -139,6 +139,6 @@ LOGIN_URL = 'login'  # Redirect to login page if not authenticated
 
 
 # Configure message storage
-from django.contrib.messages import constants as messages
+from django.contrib.messages import constants as messages # type: ignore
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

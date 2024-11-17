@@ -1,11 +1,11 @@
 # POS_APP/views.py
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404 # type: ignore
+from django.contrib import messages # type: ignore
+from django.http import JsonResponse # type: ignore
 from .models import Transaction, TransactionItem, Product
 from .forms import TransactionItemForm
-from django.views.decorators.http import require_POST
-from django.middleware.csrf import get_token
+from django.views.decorators.http import require_POST # type: ignore
+from django.middleware.csrf import get_token # type: ignore
 import json
 
 def pos_view(request):

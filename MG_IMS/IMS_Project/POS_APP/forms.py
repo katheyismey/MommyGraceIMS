@@ -1,5 +1,5 @@
 # POS_APP/forms.py
-from django import forms
+from django import forms # type: ignore
 from .models import TransactionItem, Product
 
 class TransactionItemForm(forms.ModelForm):

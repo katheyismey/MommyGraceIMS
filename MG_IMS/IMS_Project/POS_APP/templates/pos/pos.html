@@ -5,7 +5,6 @@
 {% block title %}Point of Sale{% endblock %}
 
 {% block head %}
-    <!-- Link to CSS file in the static directory using the static template tag -->
     <link rel="stylesheet" href="{% static 'POS_APP/css/pos.css' %}">
     <script src="{% static 'POS_APP/js/pos.js' %}"></script>
 {% endblock %}
@@ -15,9 +14,10 @@
     <!-- Left Side: Product Selection and Quantity -->
     <div class="pos-left">
         <h2>Select Product</h2>
+        <br>
         <form method="post">
             {% csrf_token %}
-    
+
             <!-- Wrapper for the inputs -->
             <div class="content-wrapper">
                 <!-- Product Search Field -->
@@ -28,13 +28,13 @@
                     <!-- Suggestions Box -->
                     <div id="product-suggestions" class="suggestions"></div>
                 </div>
-    
+
                 <!-- Quantity Field Below Product Search -->
                 <div class="quantity-container">
                     <input type="number" name="quantity_sold" id="quantity-sold" placeholder="Add quantity">
                 </div>
             </div>
-    
+
             <!-- Add to Cart Button -->
             <button type="submit" class="add-to-cart-button">Add to Cart</button>
         </form>
@@ -42,7 +42,13 @@
 
     <!-- Right Side: Current Transaction (Cart) -->
     <div class="pos-right">
-        <h2>Current Transaction</h2>
+        <div class="transaction-header">
+            <h2>Current Transaction</h2>
+            <button class="transaction-records-button">
+                <img src="{% static 'POS_APP/icons/history.png' %}" alt="History Icon">
+                Records
+            </button>
+        </div>
         <table class="transaction-table">
             <thead>
                 <tr>
@@ -73,13 +79,13 @@
                     <td colspan="5" class="empty-cart">No items in the cart.</td>
                 </tr>
                 {% endfor %}
-            </tbody>            
+            </tbody>
         </table>
 
         <div class="total-amount">
-            <span class="total-label">Running Total: </span>
+            <span class="total-label">Running Total:</span>
             <span class="total-value">₱<span id="total">{{ total }}</span></span>
-        </div>        
+        </div>
 
         <form method="post" action="{% url 'POS_APP:complete_transaction' %}">
             {% csrf_token %}

@@ -6,7 +6,7 @@
     background-color: #f1f1f1;
 }
 
-/* Make the left div 30% and the right div 70% */
+/* Fixed height for pos-left */
 .pos-left {
     width: 30%;
     background-color: #ffffff;
@@ -16,9 +16,36 @@
     border: 1px solid #e0e0e0;
     display: flex;
     flex-direction: column;
+    height: 55%; /* Fixed height for pos-left */
 }
 
+.transaction-header {
+    display: flex;
+    justify-content: space-between; /* Place h2 on the left and button on the right */
+    align-items: center;
+    margin-bottom: 10px; /* Add some space below the header */
+}
 
+.transaction-header h2 {
+    margin-top: 0; /* Remove default margin for better alignment */
+}
+
+.transaction-records-button {
+    padding: 10px 15px;
+    background-color: #fcfcfc;
+    color: #333333;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.transaction-records-button:hover {
+    transform: translateY(-2px);
+}
+
+/* Right panel adjusts height dynamically */
 .pos-right {
     width: 70%;
     background-color: #ffffff;
@@ -27,8 +54,9 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     border: 1px solid #e0e0e0;
     display: flex;
-    flex-direction: column; /* Stack children vertically */
-    justify-content: space-between; /* Allow space between elements */
+    flex-direction: column;
+    overflow-y: hidden; /* Allow scrolling when content exceeds */
+    
 }
 
 .add-to-cart-button {
@@ -41,7 +69,7 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: auto; /* Push Add to Cart button to the bottom */
+
 }
 
 .add-to-cart-button:hover {
@@ -85,7 +113,7 @@
 .total-amount {
     font-size: 18px;
     font-weight: bold;
-    margin-top: 30px;
+    margin-top: 20px;
     color: #333;
     display: flex;
     justify-content: space-between;
@@ -152,7 +180,7 @@
 .quantity-container {
     margin-top: 15px;
     position: relative;
-    margin-bottom: 90px;
+    margin-bottom: 70px;
     width: 100%;
 }
 
@@ -225,4 +253,9 @@
 
 .remove-button:hover {
     background-color: #c82333;
+}
+
+.transaction-records-button img {
+    width: 16px; /* Adjust icon size */
+    height: 16px; /* Match width and height */
 }

@@ -1,5 +1,5 @@
 # POS_APP/models.py
-from django.db import models 
+from django.db import models  # type: ignore
 
 class Product(models.Model):
     name = models.CharField(max_length=200)
