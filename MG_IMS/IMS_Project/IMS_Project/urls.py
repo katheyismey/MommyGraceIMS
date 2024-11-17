@@ -10,7 +10,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('inventory/', views.inventory, name='inventory'),
     path('transactions/', views.transactions, name='transactions'),
-    path('pos/', include('POS_APP.urls')),
+    path('pos/', include('POS_APP.urls')),  # POS_APP URLs
     path('sales/', views.sales_summary, name='sales'),  # Updated to use the sales_summary view
     path('debts/', views.debts, name='debts'),
     path('expenses/', views.expenses, name='expenses'),

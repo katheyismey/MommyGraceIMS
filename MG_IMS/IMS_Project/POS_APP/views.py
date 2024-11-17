@@ -111,6 +111,6 @@ def clear_cart(request):
     request.session['cart'] = []
     return JsonResponse({"success": True})
 
-def transactions(request):
-    # Add your logic here for processing the transactions
-    return render(request, 'pos/transactions.html')
+def pos(request):
+    # Render the POS HTML template
+    return render(request, 'pos/pos.html')

@@ -8,4 +8,5 @@ urlpatterns = [
     path('update_cart_item/', views.update_cart_item, name='update_cart_item'),  # New route
     path('remove_from_cart/', views.remove_from_cart, name='remove_from_cart'),
     path('clear_cart/', views.clear_cart, name='clear_cart'),
+    path('transactions/', views.pos, name='transactions'),
 ]
