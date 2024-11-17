@@ -1,0 +1,57 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+{% load static %}
+
+{% block title %}Transaction Records{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'POS_APP/css/transaction_records.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="transaction-records-container">
+        <h2>Transaction Records</h2>
+        <a href="{% url 'POS_APP:pos' %}" class="back-link">Back</a>
+        <!-- Search Form -->
+        <form method="get" class="search-form">
+            <input type="text" name="query" placeholder="Search by Transaction ID" value="{{ query }}">
+            <button type="submit">Search</button>
+            <a href="{% url 'POS_APP:transaction_records' %}" class="clear-button">Clear</a>
+        </form>
+    <div class="records-cards">
+        {% for transaction in transactions %}
+        <div class="transaction-card">
+            <div class="transaction-header">
+                <h3>Transaction ID: {{ transaction.id }}</h3>
+                <span class="transaction-date">{{ transaction.date|date:"Y-m-d H:i" }}</span>
+            </div>
+            <div class="transaction-body">              
+                <p><strong>Products:</strong></p>
+                <ul>
+                    {% for item in transaction.items.all %}
+                    <li>{{ item.product.name }} ({{ item.quantity_sold }})</li>
+                    {% endfor %}
+                </ul>
+                <p><strong>Total Amount:</strong> ₱{{ transaction.total_price }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p>No transactions available.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+        {% if transactions.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ transactions.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ transactions.number }} of {{ transactions.paginator.num_pages }}</span>
+
+        {% if transactions.has_next %}
+        <a href="?page={{ transactions.next_page_number }}">Next</a>
+        <a href="?page={{ transactions.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

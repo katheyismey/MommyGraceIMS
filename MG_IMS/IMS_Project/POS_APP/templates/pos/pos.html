@@ -44,10 +44,10 @@
     <div class="pos-right">
         <div class="transaction-header">
             <h2>Current Transaction</h2>
-            <button class="transaction-records-button">
+            <a href="{% url 'POS_APP:transaction_records' %}" class="transaction-records-button">
                 <img src="{% static 'POS_APP/icons/history.png' %}" alt="History Icon">
                 Records
-            </button>
+            </a>
         </div>
         <table class="transaction-table">
             <thead>
