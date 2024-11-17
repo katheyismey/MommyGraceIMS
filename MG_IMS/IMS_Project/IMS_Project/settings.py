@@ -120,7 +120,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # Assuming there's a 'static' folder at the project level
     os.path.join(BASE_DIR, 'MGSariSari_Inventory/static'),  # App-level static files
     os.path.join(BASE_DIR, 'POS_APP/static'),
 ]
