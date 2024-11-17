@@ -1,0 +1,91 @@
+{% extends "pos/base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Point of Sale{% endblock %}
+
+{% block head %}
+    <!-- Link to CSS file in the static directory using the static template tag -->
+    <link rel="stylesheet" href="{% static 'POS_APP/css/pos.css' %}">
+    <script src="{% static 'POS_APP/js/pos.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="pos-container">
+    <!-- Left Side: Product Selection and Quantity -->
+    <div class="pos-left">
+        <h2>Select Product</h2>
+        <form method="post">
+            {% csrf_token %}
+    
+            <!-- Wrapper for the inputs -->
+            <div class="content-wrapper">
+                <!-- Product Search Field -->
+                <div class="product-search-container">
+                    <input type="text" id="product-search" placeholder="Search for a product..." autocomplete="off">
+                    <!-- Hidden field for selected product ID -->
+                    <input type="hidden" name="product_id" id="selected-product-id">
+                    <!-- Suggestions Box -->
+                    <div id="product-suggestions" class="suggestions"></div>
+                </div>
+    
+                <!-- Quantity Field Below Product Search -->
+                <div class="quantity-container">
+                    <input type="number" name="quantity_sold" id="quantity-sold" placeholder="Add quantity">
+                </div>
+            </div>
+    
+            <!-- Add to Cart Button -->
+            <button type="submit" class="add-to-cart-button">Add to Cart</button>
+        </form>
+    </div>
+
+    <!-- Right Side: Current Transaction (Cart) -->
+    <div class="pos-right">
+        <h2>Current Transaction</h2>
+        <table class="transaction-table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="cart-items">
+                {% for item in cart %}
+                <tr data-product-id="{{ item.product_id }}">
+                    <td>{{ item.product_name }}</td>
+                    <td>
+                        <button type="button" class="quantity-button" onclick="adjustQuantity('{{ item.product_id }}', -1)">-</button>
+                        <span class="quantity">{{ item.quantity }}</span>
+                        <button type="button" class="quantity-button" onclick="adjustQuantity('{{ item.product_id }}', 1)">+</button>
+                    </td>
+                    <td>₱{{ item.price }}</td>
+                    <td class="total-price">₱{{ item.quantity|multiply:item.price }}</td>
+                    <td>
+                        <button type="button" class="remove-button" onclick="removeItem('{{ item.product_id }}')">Remove</button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-cart">No items in the cart.</td>
+                </tr>
+                {% endfor %}
+            </tbody>            
+        </table>
+
+        <div class="total-amount">
+            <span class="total-label">Running Total: </span>
+            <span class="total-value">₱<span id="total">{{ total }}</span></span>
+        </div>        
+
+        <form method="post" action="{% url 'complete_transaction' %}">
+            {% csrf_token %}
+            <button type="button" class="cancel-transaction-button" onclick="clearCart()">Cancel Transaction</button>
+            <button type="submit" class="complete-transaction-button">Complete Transaction</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

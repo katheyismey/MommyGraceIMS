@@ -1,0 +1,228 @@
+/* Enhanced POS styles in pos.css */
+.pos-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f1f1f1;
+}
+
+/* Make the left div 30% and the right div 70% */
+.pos-left {
+    width: 30%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.pos-right {
+    width: 70%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    justify-content: space-between; /* Allow space between elements */
+}
+
+.add-to-cart-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #1AA488;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: auto; /* Push Add to Cart button to the bottom */
+}
+
+.add-to-cart-button:hover {
+    background-color: #136f5d;
+    transform: translateY(-2px);
+}
+
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.transaction-table th, .transaction-table td {
+    padding: 14px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 14px;
+}
+
+.transaction-table th {
+    background-color: #1AA488;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.transaction-table td {
+    background-color: #fbfbfb;
+}
+
+.empty-cart {
+    color: #aaa;
+    text-align: center;
+    font-style: italic;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.total-amount {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 30px;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-label {
+    margin-right: auto; /* Aligns label to the left */
+}
+
+.total-value {
+    margin-left: auto; /* Aligns value to the right */
+    margin-right: 170px;
+}
+
+.complete-transaction-button, .cancel-transaction-button {
+    width: 49%;
+    padding: 12px;
+    margin-top: 10px;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.complete-transaction-button {
+    background-color: #007bff;
+}
+
+.complete-transaction-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.cancel-transaction-button {
+    background-color: #dc3545;
+}
+
+.cancel-transaction-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+/* Container for the product search and suggestions */
+.product-search-container {
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+#product-search {
+    border: 1px solid #ddd;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.quantity-container {
+    margin-top: 15px;
+    position: relative;
+    margin-bottom: 90px;
+    width: 100%;
+}
+
+#quantity-sold {
+    border: 1px solid #ddd;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.suggestions {
+    border: 1px solid #ddd;
+    margin-top: -1px;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    position: absolute;
+    width: 100%;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.suggestion-item {
+    padding: 14px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.suggestion-item:hover {
+    background-color: #f7f7f7;
+}
+
+#product-search:focus {
+    box-shadow: none;
+    border-color: #ccc;
+}
+
+.quantity-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.quantity-button:hover {
+    background-color: #0056b3;
+}
+
+.remove-button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.remove-button:hover {
+    background-color: #c82333;
+}

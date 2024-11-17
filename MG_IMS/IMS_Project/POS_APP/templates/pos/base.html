@@ -1,0 +1,85 @@
+<!-- POS_APP/templates/POS_APP/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Inventory Management System{% endblock %}</title>
+    
+    <!-- Allow child templates to inject additional head elements -->
+    {% block head %}{% endblock %}
+    
+    <style>
+        /* Global styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            padding: 20px;
+        }
+        /* Header styling */
+        .header {
+            background-color: #1AA488;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #192227;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 50px; /* Below the header */
+            left: 0;
+            padding-top: 25px;
+            font-size: 16px;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            padding: 10px 20px;
+            color: white;
+        }
+        /* Main content */
+        .content {
+            margin-left: 270px;
+            padding-top: 100px; /* Account for fixed header */
+        }
+        /* Additional styles for forms, tables, buttons, etc., can go here */
+    </style>
+</head>
+<body>
+
+<div class="header">Inventory Management System</div>
+
+<div class="sidebar">
+    <ul>
+        <li>Dashboard</li>
+        <li>Inventory</li>
+        <li>Transactions</li>
+        <li>Sales</li>
+        <li>Debts</li>
+        <li>Expenses</li>
+    </ul>
+</div>
+
+<div class="content container">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
