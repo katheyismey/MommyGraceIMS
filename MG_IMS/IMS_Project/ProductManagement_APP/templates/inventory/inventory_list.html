@@ -1,0 +1,147 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% block title %}Inventory{% endblock %}
+
+{% block content %}
+<div class="inventory-container">
+    <h1>Inventory</h1>
+
+  <!-- Category Management Section -->
+  <div class="category-actions">
+    <!-- Add Category Button -->
+    <form action="{% url 'ProductManagement_APP:add_category' %}" method="get">
+        <button type="submit" class="button add-category">Add Category</button>
+    </form>
+
+    <!-- Dropdown to select category -->
+    <form method="get" action="{% url 'ProductManagement_APP:inventory_list' %}">
+        <label for="category_select">Choose Category:</label>
+        <select id="category_select" name="selected_category" onchange="this.form.submit()">
+            <option value="">All Products</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}" {% if category.id == selected_category %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if selected_category %}
+        <!-- Edit and Delete buttons for selected category -->
+        <form action="{% url 'ProductManagement_APP:edit_category' selected_category %}" method="get" style="display:inline;">
+            <button type="submit" class="button edit-category">Edit Category</button>
+        </form>
+        <form action="{% url 'ProductManagement_APP:delete_category' selected_category %}" method="get" style="display:inline;">
+            <button type="submit" class="button delete-category">Delete Category</button>
+        </form>
+    {% endif %}
+</div>
+
+    <!-- Supplier Management Section -->
+    <div class="supplier-actions">
+        <h2>Suppliers</h2>
+        <form action="{% url 'ProductManagement_APP:add_supplier' %}" method="get">
+            <button type="submit" class="button add-supplier">Add Supplier</button>
+        </form>
+    </div>
+
+    <!-- Product Management Buttons -->
+    <div class="product-actions">
+        <form action="{% url 'ProductManagement_APP:add_product' %}" method="get">
+            <button type="submit" class="button add-product">Add Product</button>
+        </form>
+    </div>
+
+    <!-- Search Bar -->
+    <form method="get" action="{% url 'ProductManagement_APP:inventory_list' %}" class="search-bar">
+        <input type="text" name="search" placeholder="Search items..." value="{{ search_query }}">
+        <button type="submit" class="button search-button">Search</button>
+    </form>
+
+    <!-- Product and ProductVersion Table -->
+    <table class="product-table">
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Classification</th>
+                <th>Category</th>
+                <th>Reorder Level</th>
+                <th>Actions</th>
+                <th>Add Version</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <!-- Parent Product Row -->
+                <tr class="product-row">
+                    <td>{{ product.product_id }}</td>
+                    <td>{{ product.product_name }}</td>
+                    <td>{{ product.product_classification }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td>{{ product.reorder_level }}</td>
+                    <td>
+                        <form action="{% url 'ProductManagement_APP:edit_product' product.product_id %}" method="get" style="display:inline;">
+                            <button type="submit" class="button edit-product">Edit</button>
+                        </form>
+                        <form action="{% url 'ProductManagement_APP:delete_product' product.product_id %}" method="get" style="display:inline;">
+                            <button type="submit" class="button delete-product">Delete</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{% url 'ProductManagement_APP:add_product_version' product.product_id %}" method="get" style="display:inline;">
+                            <button type="submit" class="button add-version">Add Version</button>
+                        </form>
+                    </td>
+                </tr>
+
+                <!-- Header Row for ProductVersion Columns -->
+                {% if product.versions.exists %}
+                <tr class="version-header-row">
+                    <th colspan="2" class="indented">Version Details</th>
+                    <th>Supplier</th>
+                    <th>Quantity</th>
+                    <th>Buying Price</th>
+                    <th>Selling Price</th>
+                    <th>Manage stock</th>
+                    <th>Actions</th>
+        
+                </tr>
+                {% endif %}
+
+                <!-- Child ProductVersion Rows -->
+                {% for version in product.versions.all %}
+                <tr class="product-version-row">
+                    <td colspan="2" class="indented">Batch ID: {{ version.batch_id }} {{ version.date_added }} </td>
+                    <td>{{ version.supplier.supplier_name }}</td>
+                    <td {% if version.product_quantity < product.reorder_level %} class="low-stock" {% endif %}>
+                        {{ version.product_quantity }}
+                    </td>
+                    <td>{{ version.buying_price }}</td>
+                    <td>{{ version.selling_price }}</td>
+                    <td>
+                        <form action="{% url 'ProductManagement_APP:stock_in' version.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="button stock-in">Stock In</button>
+                        </form>
+                        <form action="{% url 'ProductManagement_APP:stock_out' version.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="button stock-out">Stock Out</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{% url 'ProductManagement_APP:edit_product_version' version.id %}" method="get" style="display:inline;">
+                            <button type="submit" class="button edit-version">Edit</button>
+                        </form>
+                        <form action="{% url 'ProductManagement_APP:delete_product_version' version.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="button delete-version">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

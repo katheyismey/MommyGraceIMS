@@ -1,0 +1,15 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% block title %}Edit Supplier{% endblock %}
+{% block header %}Edit Supplier{% endblock %}
+
+{% block content %}
+    <h2>Edit Supplier: {{ form.instance.supplier_name }}</h2>
+
+    <form method="POST" class="form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="button save">Save Changes</button>
+        <a href="{% url 'ProductManagement_APP:inventory_list' %}" class="button cancel">Cancel</a>
+    </form>
+{% endblock %}
