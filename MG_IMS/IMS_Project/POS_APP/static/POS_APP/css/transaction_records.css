@@ -1,0 +1,170 @@
+.transaction-records-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+h2 {
+    display: inline-block; /* Keep h2 inline with Back link */
+}
+
+.records-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between cards */
+    margin-top: 20px;
+}
+
+.transaction-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.transaction-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.transaction-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #1AA488;
+}
+
+.transaction-date {
+    font-size: 14px;
+    color: #888;
+}
+
+.transaction-body p {
+    margin: 5px 0;
+}
+
+.transaction-body ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.transaction-body ul li {
+    background-color: #f3f3f3;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px; /* Aligns with the padding of container */
+    right: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    color: #333333;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #f2f2f2;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.back-link:hover {
+    background-color: #e8e6e6;
+}
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination a {
+    color: #333333;
+    text-decoration: none;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    margin: 0 5px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #e2e8f0;
+}
+
+.pagination a.disabled {
+    pointer-events: none; /* Disable clicking */
+    color: #aaa; /* Lighter color for disabled state */
+    background-color: #f1f1f1;
+    border-color: #ccc;
+}
+
+.pagination span {
+    padding: 8px 12px;
+    margin: 0 5px;
+    font-weight: bold;
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+}
+
+.search-form input {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 200px;
+}
+
+.search-form button {
+    padding: 8px 12px;
+    background-color: #1AA488;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-form button:hover {
+    background-color: #136f5d;
+}
+
+
+.search-form .clear-button {
+    padding: 8px 12px;
+    background-color: #dc3545; /* Red color for clear button */
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.search-form .clear-button:hover {
+    background-color: #b02a37;
+}

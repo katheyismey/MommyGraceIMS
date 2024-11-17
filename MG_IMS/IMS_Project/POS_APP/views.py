@@ -6,6 +6,7 @@ from .models import Transaction, TransactionItem, Product
 from .forms import TransactionItemForm
 from django.views.decorators.http import require_POST # type: ignore
 from django.middleware.csrf import get_token # type: ignore
+from django.core.paginator import Paginator,PageNotAnInteger, EmptyPage # type: ignore
 import json
 
 def pos_view(request):
@@ -110,3 +111,25 @@ def remove_from_cart(request):
 def clear_cart(request):
     request.session['cart'] = []
     return JsonResponse({"success": True})
+
+def transaction_records(request):
+    query = request.GET.get('query', '')  # Get the search query from the URL
+    transactions_list = Transaction.objects.prefetch_related('items__product').order_by('id')
+
+    if query.isdigit():  # Check if the query is a digit
+        transactions_list = transactions_list.filter(id=query)  # Exact match for transaction ID
+    elif query:  # If the query is not numeric, return an empty queryset
+        transactions_list = transactions_list.none()
+
+    paginator = Paginator(transactions_list, 9)  # 9 transactions per page
+    page = request.GET.get('page', 1)
+
+    try:
+        transactions = paginator.page(page)
+    except (PageNotAnInteger, EmptyPage):
+        transactions = paginator.page(1)  # Default to first page if invalid page
+
+    return render(request, 'pos/transaction_records.html', {
+        'transactions': transactions,
+        'query': query  # Pass the query to the template
+    })
