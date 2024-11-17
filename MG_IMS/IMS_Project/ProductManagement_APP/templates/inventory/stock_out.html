@@ -1,0 +1,34 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% block title %}Stock Out{% endblock %}
+{% block header %}Stock Out - {{ version.product.product_name }}{% endblock %}
+
+{% block content %}
+    <h2>Stock Out - {{ version.product.product_name }}</h2>
+    
+    <!-- Display current stock quantity -->
+    <p>Current Stock: {{ version.product_quantity }}</p>
+    
+    <form method="POST" class="form">
+        {% csrf_token %}
+        
+        <!-- Input field for stock out amount -->
+        <label for="stock_out_amount">Amount to subtract:</label>
+        <input type="number" id="stock_out_amount" name="stock_out_amount" min="1" max="{{ version.product_quantity }}" required>
+        
+        <!-- Display error messages -->
+        {% if messages %}
+            <div class="error-messages">
+                {% for message in messages %}
+                    <p class="error">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Submit button -->
+        <button type="submit" class="button delete">Remove Stock</button>
+        
+        <!-- Cancel button to go back -->
+        <a href="{% url 'ProductManagement_APP:inventory_list' %}" class="button cancel">Cancel</a>
+    </form>
+{% endblock %}

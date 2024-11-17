@@ -1,0 +1,106 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Inventory Management System{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'inventory/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'inventory/inventory.css' %}">
+    <style>
+        /* CSS for links in the sidebar to remove underline and set text color to white */
+        .menu-item a {
+            text-decoration: none; /* Remove underline */
+            color: white; /* Set text color to white */
+            display: flex; /* Maintain flex alignment with icon */
+            align-items: center; /* Vertical center align icon and text */
+        }
+
+        .menu-item a:hover {
+            color: #f1f1f1; /* Slightly change color on hover for better UX */
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="top-nav">
+        <div class="nav-left">
+            <img src="{% static 'icons/menu.png' %}" alt="Menu Icon" class="menu-icon" style="width: 24px; height: 24px;">
+        </div>
+        <div class="nav-center">
+            <h2>Inventory Management System</h2>
+        </div>
+        <div class="nav-right">
+            <img src="{% static 'icons/profile.png' %}" alt="Profile Icon" class="profile-icon" style="width: 32px; height: 32px;">
+            <div class="profile-dropdown">
+                <a href="#">Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                        <img src="{% static 'icons/dashboard.png' %}" alt="Dashboard Icon" style="width: 20px; height: 20px;">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <span>
+                        <img src="{% static 'icons/inventory.png' %}" alt="Inventory Icon" style="width: 20px; height: 20px;">
+                        Inventory
+                    </span>
+                </li>
+                <li class="menu-item">
+                    <span>
+                        <img src="{% static 'icons/transactions.png' %}" alt="Transactions Icon" style="width: 20px; height: 20px;">
+                        Transactions
+                    </span>
+                </li>
+                <li class="menu-item">
+                        <img src="{% static 'icons/sales.png' %}" alt="Sales Icon" style="width: 20px; height: 20px;">
+                        Sales
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <span>
+                        <img src="{% static 'icons/debts.png' %}" alt="Debts Icon" style="width: 20px; height: 20px;">
+                        Debts
+                    </span>
+                </li>
+                <li class="menu-item">
+                    <span>
+                        <img src="{% static 'icons/expenses.png' %}" alt="Expenses Icon" style="width: 20px; height: 20px;">
+                        Expenses
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <!-- JavaScript for Profile Dropdown -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const profileIcon = document.querySelector(".profile-icon");
+            const dropdown = document.querySelector(".profile-dropdown");
+
+            profileIcon.addEventListener("click", function(event) {
+                event.stopPropagation();
+                dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+            });
+
+            document.addEventListener("click", function() {
+                dropdown.style.display = "none";
+            });
+        });
+    </script>
+</body>
+</html>

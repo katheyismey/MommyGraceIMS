@@ -1,0 +1,257 @@
+/* General Reset and Body Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #f5f5f5;
+    margin: 0;
+}
+
+/* Content Area Styling */
+.content {
+    flex: 1;
+    padding: 40px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e6ed;
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Inventory Container Styling */
+.inventory-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+.category-actions, .product-actions, .search-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.search-bar input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex: 1;
+}
+
+/* Button Styles */
+.button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #7cb1a6; /* Set button background color */
+    color: #FFF; /* Set button text color */
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #128a6f; /* Darker shade on hover */
+}
+
+/* Dropdown and Label Styles */
+label {
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px; /* Space between label and dropdown */
+}
+
+#category_select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+/* Change border color on focus */
+#category_select:focus {
+    border-color: #1AA488;
+    outline: none;
+}
+
+/* Specific Button Styles */
+.add-category {
+    background-color: #4CAF50;; /* Match the general button style */
+    color: #FFF;
+}
+
+.edit-category, .edit-product {
+    background-color: #FFC107;
+    color: #fff;
+}
+
+.delete-category, .delete-product {
+    background-color: #f44336;
+    color: #fff;
+}
+
+.stock-in {
+    background-color: #4CAF50;
+    
+}
+
+.stock-out {
+    background-color: #f44336;
+}
+
+/* Product Table Styling */
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product-table th, .product-table td {
+    padding: 15px;
+    border: 1px solid #e0e6ed;
+    text-align: left;
+}
+
+.product-table th {
+    background-color: #056e59; /* Table header background color */
+    font-weight: bold;
+    color: #FFF;
+}
+
+.product-table tr:hover {
+    background-color: #baf5e9;
+}
+
+/* Low Stock Highlight */
+.low-stock {
+    background-color: #ffcccc;
+    color: #a00;
+    font-weight: bold;
+}
+
+/* Version Header Row Styling */
+.version-header-row {
+    background-color: #e6f7f4;
+    font-weight: bold;
+    text-align: center;
+    color: #056e59;
+}
+
+/* Product Version Row Styling */
+.product-version-row {
+    background-color: #f9f9f9;
+}
+
+.product-version-row .indented {
+    padding-left: 20px;
+    font-style: italic;
+    color: #555;
+}
+
+/* Form and Input Styling */
+.form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form input[type="text"],
+.form input[type="number"],
+.form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.save {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.cancel {
+    background-color: #bbb;
+}
+
+.delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+/* Product Version Header Row Styling */
+.version-header-row th {
+    background-color: #04ad8c; /* Blue background for version headers */
+    color: #fff; /* White text */
+    font-weight: bold;
+}
+
+/* Edit and Delete Buttons for Product Versions */
+.button.edit-version {
+    background-color: #ffc107; /* Yellow background for edit buttons */
+    color: #fff;
+}
+
+.button.delete-version {
+    background-color: #f44336; /* Red background for delete buttons */
+    color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        padding: 20px;
+    }
+
+    .inventory-container {
+        padding: 0 10px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    .product-table th, .product-table td {
+        padding: 10px;
+    }
+
+    .product-version-row .indented {
+        padding-left: 10px;
+    }
+}

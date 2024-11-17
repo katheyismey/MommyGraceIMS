@@ -1,0 +1,18 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% block title %}Add Supplier{% endblock %}
+{% block header %}Add New Supplier{% endblock %}
+
+{% block content %}
+    <h2>Add Supplier</h2>
+    <form method="POST" class="form">
+        {% csrf_token %}
+        
+        <!-- Display form fields -->
+        {{ form.as_p }}
+
+        <!-- Submit and Cancel buttons -->
+        <button type="submit" class="button save">Save Supplier</button>
+        <a href="{% url 'ProductManagement_APP:inventory_list' %}" class="button cancel">Cancel</a>
+    </form>
+{% endblock %}

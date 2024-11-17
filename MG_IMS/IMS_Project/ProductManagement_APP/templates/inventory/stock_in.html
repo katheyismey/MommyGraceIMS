@@ -1,0 +1,23 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% block title %}Stock In{% endblock %}
+{% block header %}Stock In - {{ version.product.product_name }}{% endblock %}
+
+{% block content %}
+    <h2>Stock In - {{ version.product.product_name }}</h2>
+    <form method="POST" class="form">
+        {% csrf_token %}
+        <label for="stock_in_amount">Amount to add:</label>
+        <input type="number" id="stock_in_amount" name="stock_in_amount" min="1" required>
+        <button type="submit" class="button save">Add Stock</button>
+        <a href="{% url 'ProductManagement_APP:inventory_list' %}" class="button cancel">Cancel</a>
+    </form>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li class="message">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

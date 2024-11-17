@@ -1,0 +1,15 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% block title %}Confirm Deletion{% endblock %}
+{% block header %}Delete Product Version{% endblock %}
+
+{% block content %}
+    <h2>Are you sure you want to delete the product version for "{{ version.product.product_name }}"?</h2>
+    <p>This action cannot be undone.</p>
+
+    <form method="POST" class="form">
+        {% csrf_token %}
+        <button type="submit" class="button delete">Delete</button>
+        <a href="{% url 'ProductManagement_APP:inventory_list' %}" class="button cancel">Cancel</a>
+    </form>
+{% endblock %}
