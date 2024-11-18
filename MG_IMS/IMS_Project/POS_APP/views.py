@@ -9,6 +9,7 @@ from django.middleware.csrf import get_token # type: ignore
 from django.core.paginator import Paginator,PageNotAnInteger, EmptyPage # type: ignore
 import json
 
+# GET Product to Transaction
 def pos_view(request):
     if request.method == "POST":
         product_id = request.POST.get('product_id')
