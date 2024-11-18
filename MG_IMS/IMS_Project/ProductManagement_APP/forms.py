@@ -1,6 +1,6 @@
 # inventory/forms.py
 
-from django import forms
+from django import forms # type: ignore
 from .models import Product, Category, ProductVersion, Supplier
 
 class ProductForm(forms.ModelForm):
