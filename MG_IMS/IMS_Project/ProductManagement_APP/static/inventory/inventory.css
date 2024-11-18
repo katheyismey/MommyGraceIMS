@@ -60,7 +60,7 @@ header h1 {
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
-    background-color: #7cb1a6; /* Set button background color */
+    background-color: #5cb6a4; /* Set button background color */
     color: #FFF; /* Set button text color */
     transition: background-color 0.3s;
 }
@@ -154,14 +154,6 @@ label {
     font-weight: bold;
 }
 
-/* Version Header Row Styling */
-.version-header-row {
-    background-color: #e6f7f4;
-    font-weight: bold;
-    text-align: center;
-    color: #078f74;
-}
-
 /* Product Version Row Styling */
 .product-version-row {
     background-color: #f9f9f9;
@@ -223,7 +215,7 @@ label {
 /* Product Version Header Row Styling */
 .version-header-row th {
     background-color: #04ad8c; /* Blue background for version headers */
-    color: #fff; /* White text */
+    color: #ffffff; /* White text */
     font-weight: bold;
 }
 

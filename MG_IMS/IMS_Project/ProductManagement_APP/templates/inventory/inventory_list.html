@@ -67,6 +67,7 @@
                 <th>Classification</th>
                 <th>Category</th>
                 <th>Reorder Level</th>
+                <th>Total Quantity</th>
                 <th>Actions</th>
                 <th>Add Version</th>
             </tr>
@@ -80,6 +81,9 @@
                     <td>{{ product.product_classification }}</td>
                     <td>{{ product.category.name }}</td>
                     <td>{{ product.reorder_level }}</td>
+                    <td {% if product.annotated_total_quantity < product.reorder_level %} class="low-stock" {% endif %}>
+                        {{ product.annotated_total_quantity }}
+                    </td>
                     <td>
                         <form action="{% url 'ProductManagement_APP:edit_product' product.product_id %}" method="get" style="display:inline;">
                             <button type="submit" class="button edit-product">Edit</button>
@@ -98,7 +102,7 @@
                 <!-- Header Row for ProductVersion Columns -->
                 {% if product.versions.exists %}
                 <tr class="version-header-row">
-                    <th colspan="2" class="indented">Version Details</th>
+                    <th colspan="2" class="indented">{{product.product_name}} Version Details</th>
                     <th>Supplier</th>
                     <th>Quantity</th>
                     <th>Buying Price</th>
