@@ -139,7 +139,12 @@ label {
 }
 
 .product-table tr:hover {
-    background-color: #baf5e9;
+    background-color: #92f0dd;
+}
+
+/* Differentiated Row Styling */
+.product-row {
+    background-color: #97c9bf; /* Light green for product rows */
 }
 
 /* Low Stock Highlight */
@@ -154,7 +159,7 @@ label {
     background-color: #e6f7f4;
     font-weight: bold;
     text-align: center;
-    color: #056e59;
+    color: #078f74;
 }
 
 /* Product Version Row Styling */
@@ -231,6 +236,15 @@ label {
 .button.delete-version {
     background-color: #f44336; /* Red background for delete buttons */
     color: #fff;
+}
+
+.supplier-actions {
+    margin-bottom: 20px; /* Adds space below the supplier section */
+}
+
+.add-supplier,
+.add-product {
+    margin-bottom: 10px; /* Adds space around buttons */
 }
 
 /* Responsive Design */

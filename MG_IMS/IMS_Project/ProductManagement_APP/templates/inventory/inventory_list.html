@@ -39,7 +39,6 @@
 
     <!-- Supplier Management Section -->
     <div class="supplier-actions">
-        <h2>Suppliers</h2>
         <form action="{% url 'ProductManagement_APP:add_supplier' %}" method="get">
             <button type="submit" class="button add-supplier">Add Supplier</button>
         </form>
@@ -47,6 +46,7 @@
 
     <!-- Product Management Buttons -->
     <div class="product-actions">
+        <h2>Products</h2>
         <form action="{% url 'ProductManagement_APP:add_product' %}" method="get">
             <button type="submit" class="button add-product">Add Product</button>
         </form>

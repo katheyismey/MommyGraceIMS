@@ -18,7 +18,7 @@ class Product(models.Model):
         return self.product_name
 
 class Supplier(models.Model):
-    supplier_name = models.CharField(max_length=255)
+    supplier_name = models.CharField(max_length=255, unique=True)
     contact_details = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -30,7 +30,7 @@ class ProductVersion(models.Model):
     buying_price = models.DecimalField(max_digits=10, decimal_places=2)
     selling_price = models.DecimalField(max_digits=10, decimal_places=2)
     product_quantity = models.IntegerField()  # This tracks stock quantity for each product version
-    batch_id = models.CharField(max_length=50, unique=True)  # Unique batch ID for FIFO tracking
+    batch_id = models.CharField(max_length=50)  # Unique batch ID for FIFO tracking
     date_added = models.DateTimeField(auto_now_add=True)  # Timestamp for FIFO logic
 
     def __str__(self):
