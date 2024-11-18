@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,14 +66,13 @@
         /* Sidebar styling */
         .sidebar {
             width: 250px;
-            background-color: #192227;
-            color: white;
-            height: 100vh;
-            position: fixed;
-            top: 65px; /* Adjusted to align with the fixed header */
-            left: 0;
-            padding-top: 25px;
-            font-size: 16px;
+    background-color: #192227;
+    color: white;
+    height: 100vh;
+    position: fixed;
+    top: 0; /* Start at the top */
+    padding-top: 65px; /* Ensure content aligns with the header */
+    font-size: 16px;
         }
 
         .sidebar ul {
@@ -103,8 +103,34 @@
         }
 
         /* Additional styles for forms, tables, buttons, etc. can go here */
+         /* Profile dropdown styling */
+    .profile-dropdown {
+        display: none;
+        position: absolute;
+        right: 10px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-dropdown a {
+        text-decoration: none;
+        color: #333;
+        font-size: 14px; /* Reduced font size */
+        font-weight: normal; /* Removed bold */
+        display: block;
+        margin: 5px 0;
+    }
+
+    .profile-dropdown a:hover {
+        color: #1AA488;
+    }
     </style>
+
 </head>
+
 <body>
 
     <!-- Combined Header -->
@@ -129,19 +155,22 @@
             <ul class="sidebar-menu">
                 <li class="menu-item">
                     <a href="{% url 'dashboard' %}">
-                        <img src="{% static 'icons/dashboard.png' %}" alt="Dashboard Icon" style="width: 20px; height: 20px;">
+                        <img src="{% static 'icons/dashboard.png' %}" alt="Dashboard Icon"
+                            style="width: 20px; height: 20px;">
                         Dashboard
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="{% url 'ProductManagement_APP:inventory_list' %}">
-                        <img src="{% static 'icons/inventory.png' %}" alt="Inventory Icon" style="width: 20px; height: 20px;">
+                        <img src="{% static 'icons/inventory.png' %}" alt="Inventory Icon"
+                            style="width: 20px; height: 20px;">
                         Inventory
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="{% url 'POS_APP:pos' %}">
-                        <img src="{% static 'icons/transactions.png' %}" alt="Transactions Icon" style="width: 20px; height: 20px;">
+                        <img src="{% static 'icons/transactions.png' %}" alt="Transactions Icon"
+                            style="width: 20px; height: 20px;">
                         Transactions
                     </a>
                 </li>
@@ -159,7 +188,8 @@
                 </li>
                 <li class="menu-item">
                     <a href="{% url 'expenses' %}">
-                        <img src="{% static 'icons/expenses.png' %}" alt="Expenses Icon" style="width: 20px; height: 20px;">
+                        <img src="{% static 'icons/expenses.png' %}" alt="Expenses Icon"
+                            style="width: 20px; height: 20px;">
                         Expenses
                     </a>
                 </li>
@@ -169,24 +199,25 @@
         <!-- Main Content Area-->
         <div class="main-content content container">
             {% block content %}{% endblock %}
-        </div> 
+        </div>
     </div>
 
     <!-- JavaScript for Profile Dropdown -->
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const profileIcon = document.querySelector(".profile-icon");
             const dropdown = document.querySelector(".profile-dropdown");
 
-            profileIcon.addEventListener("click", function(event) {
+            profileIcon.addEventListener("click", function (event) {
                 event.stopPropagation();
                 dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
             });
 
-            document.addEventListener("click", function() {
+            document.addEventListener("click", function () {
                 dropdown.style.display = "none";
             });
         });
     </script>
 </body>
+
 </html>
