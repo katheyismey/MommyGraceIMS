@@ -8,7 +8,7 @@ from .models import Product, Category, ProductVersion, Supplier
 from .forms import ProductForm, CategoryForm, ProductVersionForm, SupplierForm
 from django.urls import reverse
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Sum, Q
 
 # Inventory list
 def inventory_list(request):
@@ -29,11 +29,15 @@ def inventory_list(request):
             Q(product_id__icontains=search_query) |
             Q(category__name__icontains=search_query)
         )
+        
+    # Annotate total_quantity to each product
+    products = products.annotate(annotated_total_quantity=Sum('versions__product_quantity'))
 
     return render(request, 'inventory/inventory_list.html', {
         'products': products,
         'categories': categories,
-        'selected_category': selected_category # Pass the selected category ID to the template
+        'selected_category': selected_category, # Pass the selected category ID to the template
+        'search_query': search_query, # Pass search query to template
     })
 
 # Add product

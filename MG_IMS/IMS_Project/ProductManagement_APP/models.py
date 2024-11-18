@@ -1,5 +1,6 @@
 # inventory/models.py
 from django.db import models
+from django.db.models import Sum
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -13,6 +14,11 @@ class Product(models.Model):
     product_classification = models.CharField(max_length=100)
     reorder_level = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    @property
+    def total_quantity(self):
+        # Calculate the total quantity by summing related product versions' quantities
+        return self.versions.aggregate(total=Sum('product_quantity'))['total'] or 0
 
     def __str__(self):
         return self.product_name
