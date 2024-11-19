@@ -9,6 +9,6 @@
     <form method="POST" class="form">
         {% csrf_token %}
         <button type="submit" class="button delete">Delete</button>
-        <a href="{% url 'ProductManagement_APP:inventory_list' %}" class="button cancel">Cancel</a>
+        <a href="{% url 'ProductManagement_APP:product_versions' version.product.product_id %}" class="button cancel">Cancel</a>
     </form>
 {% endblock %}

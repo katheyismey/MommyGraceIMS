@@ -239,6 +239,54 @@ label {
     margin-bottom: 10px; /* Adds space around buttons */
 }
 
+/* Versions Container Styling */
+.versions-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Version Table Styling */
+.version-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.version-table th,
+.version-table td {
+    padding: 15px;
+    border: 1px solid #e0e6ed;
+    text-align: left;
+}
+
+.version-table th {
+    background-color: #03a583; /* Header background color */
+    font-weight: bold;
+    color: #FFF; /* White text for headers */
+}
+
+.version-table tr:hover {
+    background-color: #c3f7e9; /* Light hover effect */
+}
+
+/* Differentiated Version Row Styling */
+.version-row {
+    background-color: #e0f7f3; /* Light greenish-blue for version rows */
+}
+
+/* Indented Version Details */
+.version-row .indented {
+    padding-left: 20px;
+    font-style: italic;
+    color: #555;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .content {
@@ -258,6 +306,19 @@ label {
     }
 
     .product-version-row .indented {
+        padding-left: 10px;
+    }
+
+    .versions-container {
+        padding: 10px;
+    }
+
+    .version-table th,
+    .version-table td {
+        padding: 10px;
+    }
+
+    .version-row .indented {
         padding-left: 10px;
     }
 }
