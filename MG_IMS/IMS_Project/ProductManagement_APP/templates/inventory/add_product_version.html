@@ -14,7 +14,7 @@
         
         <!-- Submit and Cancel buttons -->
         <button type="submit" class="button save">Save Version</button>
-        <a href="{% url 'ProductManagement_APP:inventory_list' %}" class="button cancel">Cancel</a>
+        <a href="{% url 'ProductManagement_APP:product_versions' product.product_id  %}" class="button cancel">Cancel</a>
     </form>
 
     <!-- Display error messages if any -->

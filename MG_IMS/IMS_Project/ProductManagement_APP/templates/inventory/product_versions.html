@@ -1,0 +1,69 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% block title %}Product Versions{% endblock %}
+
+{% block content %}
+<div class="versions-container">
+    <h1>Product Versions for {{ product.product_name }}</h1>
+
+    <!-- Add Version Button -->
+    <div class="version-actions">
+        <form action="{% url 'ProductManagement_APP:add_product_version' product.product_id %}" method="get" style="display:inline;">
+            <button type="submit" class="button add-version">Add Version</button>
+        </form>
+    </div>
+
+
+    <table class="version-table">
+        <thead>
+            <tr>
+                <th>Batch ID</th>
+                <th>Date Added</th>
+                <th>Supplier</th>
+                <th>Quantity</th>
+                <th>Buying Price</th>
+                <th>Selling Price</th>
+                <th>Stock Management</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for version in product.versions.all %}
+            <tr>
+                <td>{{ version.batch_id }}</td>
+                <td>{{ version.date_added }}</td>
+                <td>{{ version.supplier.supplier_name }}</td>
+                <td {% if version.product_quantity < product.reorder_level %} class="low-stock" {% endif %}>
+                    {{ version.product_quantity }}
+                </td>
+                <td>{{ version.buying_price }}</td>
+                <td>{{ version.selling_price }}</td>
+                <td>
+                    <form action="{% url 'ProductManagement_APP:stock_in' version.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="button stock-in">Stock In</button>
+                    </form>
+                    <form action="{% url 'ProductManagement_APP:stock_out' version.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="button stock-out">Stock Out</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="{% url 'ProductManagement_APP:edit_product_version' version.id %}" method="get" style="display:inline;">
+                        <button type="submit" class="button edit-version">Edit</button>
+                    </form>
+                    <form action="{% url 'ProductManagement_APP:delete_product_version' version.id %}" method="get" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="button delete-version">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+     <form action="{% url 'ProductManagement_APP:inventory_list' %}"  method="get" style="display:inline;">
+        <button type="submit" class="button back to inventory"> Back to Inventory </button>
+    </form>
+</div>
+{% endblock %}

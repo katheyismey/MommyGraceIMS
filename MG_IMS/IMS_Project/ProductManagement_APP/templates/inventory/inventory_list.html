@@ -44,8 +44,8 @@
         </form>
     </div>
 
-    <!-- Product Management Buttons -->
-    <div class="product-actions">
+     <!-- Product Management Buttons -->
+     <div class="product-actions">
         <h2>Products</h2>
         <form action="{% url 'ProductManagement_APP:add_product' %}" method="get">
             <button type="submit" class="button add-product">Add Product</button>
@@ -58,7 +58,7 @@
         <button type="submit" class="button search-button">Search</button>
     </form>
 
-    <!-- Product and ProductVersion Table -->
+    <!-- Parent Product Table -->
     <table class="product-table">
         <thead>
             <tr>
@@ -69,81 +69,36 @@
                 <th>Reorder Level</th>
                 <th>Total Quantity</th>
                 <th>Actions</th>
-                <th>Add Version</th>
+                <th>View Versions</th>
             </tr>
         </thead>
         <tbody>
             {% for product in products %}
-                <!-- Parent Product Row -->
-                <tr class="product-row">
-                    <td>{{ product.product_id }}</td>
-                    <td>{{ product.product_name }}</td>
-                    <td>{{ product.product_classification }}</td>
-                    <td>{{ product.category.name }}</td>
-                    <td>{{ product.reorder_level }}</td>
-                    <td {% if product.annotated_total_quantity < product.reorder_level %} class="low-stock" {% endif %}>
-                        {{ product.annotated_total_quantity }}
-                    </td>
-                    <td>
-                        <form action="{% url 'ProductManagement_APP:edit_product' product.product_id %}" method="get" style="display:inline;">
-                            <button type="submit" class="button edit-product">Edit</button>
-                        </form>
-                        <form action="{% url 'ProductManagement_APP:delete_product' product.product_id %}" method="get" style="display:inline;">
-                            <button type="submit" class="button delete-product">Delete</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="{% url 'ProductManagement_APP:add_product_version' product.product_id %}" method="get" style="display:inline;">
-                            <button type="submit" class="button add-version">Add Version</button>
-                        </form>
-                    </td>
-                </tr>
-
-                <!-- Header Row for ProductVersion Columns -->
-                {% if product.versions.exists %}
-                <tr class="version-header-row">
-                    <th colspan="2" class="indented">{{product.product_name}} Version Details</th>
-                    <th>Supplier</th>
-                    <th>Quantity</th>
-                    <th>Buying Price</th>
-                    <th>Selling Price</th>
-                    <th>Manage stock</th>
-                    <th>Actions</th>
-        
-                </tr>
-                {% endif %}
-
-                <!-- Child ProductVersion Rows -->
-                {% for version in product.versions.all %}
-                <tr class="product-version-row">
-                    <td colspan="2" class="indented">Batch ID: {{ version.batch_id }} {{ version.date_added }} </td>
-                    <td>{{ version.supplier.supplier_name }}</td>
-                    <td {% if version.product_quantity < product.reorder_level %} class="low-stock" {% endif %}>
-                        {{ version.product_quantity }}
-                    </td>
-                    <td>{{ version.buying_price }}</td>
-                    <td>{{ version.selling_price }}</td>
-                    <td>
-                        <form action="{% url 'ProductManagement_APP:stock_in' version.id %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="button stock-in">Stock In</button>
-                        </form>
-                        <form action="{% url 'ProductManagement_APP:stock_out' version.id %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="button stock-out">Stock Out</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="{% url 'ProductManagement_APP:edit_product_version' version.id %}" method="get" style="display:inline;">
-                            <button type="submit" class="button edit-version">Edit</button>
-                        </form>
-                        <form action="{% url 'ProductManagement_APP:delete_product_version' version.id %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="button delete-version">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
+            <tr>
+                <td>{{ product.product_id }}</td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.product_classification }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>{{ product.reorder_level }}</td>
+                <td {% if product.annotated_total_quantity < product.reorder_level %} class="low-stock" {% endif %}>
+                    {{ product.annotated_total_quantity }}
+                </td>
+                <td>
+                    <!-- Edit and Delete Buttons -->
+                    <form action="{% url 'ProductManagement_APP:edit_product' product.product_id %}" method="get" style="display:inline;">
+                        <button type="submit" class="button edit-product">Edit</button>
+                    </form>
+                    <form action="{% url 'ProductManagement_APP:delete_product' product.product_id %}" method="get" style="display:inline;">
+                        <button type="submit" class="button delete-product">Delete</button>
+                    </form>
+                </td>
+                <td>
+                    <!-- Link to Versions Table -->
+                    <form action="{% url 'ProductManagement_APP:product_versions' product.product_id %}" method="get" style="display:inline;">
+                        <button type="submit" class="button product_versions"> View versions </button>
+                    </form>
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>

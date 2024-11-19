@@ -39,6 +39,11 @@ def inventory_list(request):
         'selected_category': selected_category, # Pass the selected category ID to the template
         'search_query': search_query, # Pass search query to template
     })
+    
+#Product Versions list
+def product_versions(request, product_id):
+    product = get_object_or_404(Product, product_id=product_id)
+    return render(request, 'inventory/product_versions.html', {'product': product})
 
 # Add product
 def add_product(request):
@@ -95,7 +100,7 @@ def add_product_version(request, product_id):
                 product_quantity=form.cleaned_data['product_quantity'],
                 batch_id=form.cleaned_data['batch_id']
             )
-            return redirect('ProductManagement_APP:inventory_list')
+            return redirect('ProductManagement_APP:product_versions', product_id=product_id)
         else:
             messages.error(request, "There was an error with your form submission.")
     else:
@@ -103,26 +108,30 @@ def add_product_version(request, product_id):
     suppliers = Supplier.objects.all()  # Get all available suppliers
     return render(request, 'inventory/add_product_version.html', {'product': product, 'form': form, 'suppliers': suppliers})
 
-# Edit Product Version
 def edit_product_version(request, version_id):
     version = get_object_or_404(ProductVersion, id=version_id)
+    product_id = version.product.product_id  # Retrieve the product ID from the version object
     if request.method == 'POST':
         form = ProductVersionForm(request.POST, instance=version)
         if form.is_valid():
             form.save()
-            return redirect('ProductManagement_APP:inventory_list')
+            return redirect('ProductManagement_APP:product_versions', product_id=product_id)  # Use the retrieved product_id
     else:
         form = ProductVersionForm(instance=version)
     return render(request, 'inventory/edit_product_version.html', {'form': form, 'version': version})
 
 # Delete Product Version
 def delete_product_version(request, version_id):
+    
     version = get_object_or_404(ProductVersion, id=version_id)
+    product_id = version.product.product_id 
+    
     if request.method == 'POST':
+        print(f"Deleting version ID: {version_id}")
         version.delete()
-        return redirect('ProductManagement_APP:inventory_list')
+        return redirect('ProductManagement_APP:product_versions', product_id=product_id)
+    
     return render(request, 'inventory/confirm_delete_product_version.html', {'version': version})
-
 
 # Add category
 def add_category(request):
@@ -162,6 +171,7 @@ def delete_category(request, category_id):
 # Stock in
 def stock_in(request, version_id):
     version = get_object_or_404(ProductVersion, id=version_id)
+    product_id = version.product.product_id 
     if request.method == 'POST':
         stock_in_amount = request.POST.get('stock_in_amount')
         if stock_in_amount:
@@ -173,7 +183,7 @@ def stock_in(request, version_id):
                     version.product_quantity += stock_in_amount
                     version.save()
                     messages.success(request, f"{stock_in_amount} units added to stock.")
-                    return redirect('ProductManagement_APP:inventory_list')
+                    return redirect('ProductManagement_APP:product_versions', product_id=product_id)
             except ValueError:
                 messages.error(request, "Invalid stock in amount. Please enter a valid number.")
         else:
@@ -183,6 +193,7 @@ def stock_in(request, version_id):
 # Stock out
 def stock_out(request, version_id):
     version = get_object_or_404(ProductVersion, id=version_id)
+    product_id = version.product.product_id 
     if request.method == 'POST':
         stock_out_amount = request.POST.get('stock_out_amount')
         if stock_out_amount:
@@ -191,7 +202,7 @@ def stock_out(request, version_id):
                 if version.product_quantity >= stock_out_amount:
                     version.product_quantity -= stock_out_amount
                     version.save()
-                    return redirect('ProductManagement_APP:inventory_list')
+                    return redirect('ProductManagement_APP:product_versions', product_id=product_id)
                 else:
                     messages.error(request, "Insufficient stock.")
             except ValueError:

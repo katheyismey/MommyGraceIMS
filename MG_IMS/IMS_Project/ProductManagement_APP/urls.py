@@ -7,6 +7,7 @@ app_name = 'ProductManagement_APP'
 
 urlpatterns = [
     path('', views.inventory_list, name='inventory_list'),
+    path('product_versions/<int:product_id>/', views.product_versions, name='product_versions'),
     
     path('add_product/', views.add_product, name='add_product'),
     path('edit_product/<int:product_id>/', views.edit_product, name='edit_product'),
