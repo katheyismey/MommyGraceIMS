@@ -280,6 +280,55 @@ label {
     background-color: #e0f7f3; /* Light greenish-blue for version rows */
 }
 
+/* Table Style */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.table thead {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table th {
+    background-color: #398659;
+    color: white;
+}
+
+.table td {
+    font-size: 14px;
+}
+
+.table .no-data {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+
+/* Optional: Add some spacing between the tables */
+.table-container {
+    margin: 30px 0;
+}
+
+
 /* Indented Version Details */
 .version-row .indented {
     padding-left: 20px;

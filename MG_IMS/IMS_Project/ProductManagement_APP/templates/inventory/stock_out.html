@@ -11,12 +11,9 @@
     
     <form method="POST" class="form">
         {% csrf_token %}
-        
-        <!-- Input field for stock out amount -->
         <label for="stock_out_amount">Amount to subtract:</label>
         <input type="number" id="stock_out_amount" name="stock_out_amount" min="1" max="{{ version.product_quantity }}" required>
         
-        <!-- Display error messages -->
         {% if messages %}
             <div class="error-messages">
                 {% for message in messages %}
@@ -25,10 +22,35 @@
             </div>
         {% endif %}
         
-        <!-- Submit button -->
         <button type="submit" class="button delete">Remove Stock</button>
-        
-        <!-- Cancel button to go back -->
-        <a href="{% url 'ProductManagement_APP:product_versions' version.product.product_id %}"class="button cancel">Cancel</a>
+        <a href="{% url 'ProductManagement_APP:product_versions' version.product.product_id %}" class="button cancel">Cancel</a>
     </form>
+
+    <!-- Display stock-out log -->
+    <div class="table-container">
+        <h3>Recent Stock Out Logs</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Quantity</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in stock_out_logs %}
+                    <tr>
+                        <td>{{ log.timestamp|date:"M d, Y H:i" }}</td>
+                        <td>{{ log.quantity }}</td>
+                        <td>{{ log.remarks|default:"-" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="no-data">No stock-out logs available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
 {% endblock %}

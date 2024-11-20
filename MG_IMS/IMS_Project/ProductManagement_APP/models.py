@@ -45,3 +45,17 @@ class ProductVersion(models.Model):
     class Meta:
         ordering = ['date_added']  # FIFO: First in first out logic based on the `date_added`
 
+class StockLog(models.Model):
+    ACTION_CHOICES = [
+        ('IN', 'Stock In'),
+        ('OUT', 'Stock Out'),
+    ]
+
+    product_version = models.ForeignKey(ProductVersion, on_delete=models.CASCADE, related_name='stock_logs')
+    action_type = models.CharField(max_length=10, choices=ACTION_CHOICES)
+    quantity = models.PositiveIntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.product_version} - {self.action_type} ({self.quantity})"
