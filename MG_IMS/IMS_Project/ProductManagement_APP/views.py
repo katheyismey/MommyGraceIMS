@@ -4,11 +4,12 @@ from django.shortcuts import render
 # inventory/views.py
 
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Category, ProductVersion, Supplier
+from .models import Product, Category, ProductVersion, Supplier, StockLog
 from .forms import ProductForm, CategoryForm, ProductVersionForm, SupplierForm
 from django.urls import reverse
 from django.contrib import messages
 from django.db.models import Sum, Q
+from django.utils.timezone import now
 
 # Inventory list
 def inventory_list(request):
@@ -171,7 +172,11 @@ def delete_category(request, category_id):
 # Stock in
 def stock_in(request, version_id):
     version = get_object_or_404(ProductVersion, id=version_id)
-    product_id = version.product.product_id 
+    product_id = version.product.product_id
+    
+    # Filter stock logs for stock-in entries and order by timestamp
+    stock_in_logs = version.stock_logs.filter(action_type='IN').order_by('-timestamp')
+    
     if request.method == 'POST':
         stock_in_amount = request.POST.get('stock_in_amount')
         if stock_in_amount:
@@ -182,34 +187,62 @@ def stock_in(request, version_id):
                 else:
                     version.product_quantity += stock_in_amount
                     version.save()
+                    # Create a new StockLog entry
+                    StockLog.objects.create(
+                        product_version=version,  # Update this field name if it's different in your model
+                        action_type='IN',
+                        quantity=stock_in_amount,
+                        remarks=f"Added {stock_in_amount} units"
+                    )
                     messages.success(request, f"{stock_in_amount} units added to stock.")
                     return redirect('ProductManagement_APP:product_versions', product_id=product_id)
             except ValueError:
                 messages.error(request, "Invalid stock in amount. Please enter a valid number.")
         else:
             messages.error(request, "Stock in amount is required.")
-    return render(request, 'inventory/stock_in.html', {'version': version})
+    return render(request, 'inventory/stock_in.html', {
+        'version': version,
+        'stock_in_logs': stock_in_logs,
+    })
 
 # Stock out
 def stock_out(request, version_id):
     version = get_object_or_404(ProductVersion, id=version_id)
     product_id = version.product.product_id 
+    stock_out_logs = version.stock_logs.filter(action_type='OUT').order_by('-timestamp')  # Added this line to get stock-out logs
+
     if request.method == 'POST':
         stock_out_amount = request.POST.get('stock_out_amount')
         if stock_out_amount:
             try:
                 stock_out_amount = int(stock_out_amount)
+                # Ensure stock_out_amount is valid and doesn't exceed the available stock
                 if version.product_quantity >= stock_out_amount:
                     version.product_quantity -= stock_out_amount
-                    version.save()
-                    return redirect('ProductManagement_APP:product_versions', product_id=product_id)
+                    if version.product_quantity < 0:
+                        messages.error(request, "Insufficient stock.")
+                    else:
+                        version.save()
+                        
+                        # Log the stock-out operation
+                        stock_log_entry = StockLog.objects.create(
+                            product_version=version,
+                            quantity=stock_out_amount,  # Store as positive since it's stock-out
+                            action_type='OUT',
+                            remarks=f"Stock-out performed by user at {now()}"
+                        )
+                        
+                        messages.success(request, f"{stock_out_amount} units removed from stock.")
+                        return redirect('ProductManagement_APP:product_versions', product_id=product_id)
                 else:
                     messages.error(request, "Insufficient stock.")
             except ValueError:
                 messages.error(request, "Invalid stock out amount.")
         else:
             messages.error(request, "Stock out amount is required.")
-    return render(request, 'inventory/stock_out.html', {'version': version})
+
+    return render(request, 'inventory/stock_out.html', {'version': version, 'stock_out_logs': stock_out_logs})  # Added stock_out_logs to context
+
 
 # Add supplier
 def add_supplier(request):
