@@ -29,7 +29,7 @@ class ProductVersionForm(forms.ModelForm):
     # This form will handle the addition or editing of a product version (specific to a supplier, price, and stock)
     class Meta:
         model = ProductVersion
-        fields = ['product', 'supplier', 'buying_price', 'product_quantity', 'selling_price', 'batch_id']
+        fields = ['product', 'supplier', 'product_quantity',  'buying_price', 'selling_price', 'batch_id']
 
     # You can also add custom logic for handling price validation if needed:
     def clean_buying_price(self):
