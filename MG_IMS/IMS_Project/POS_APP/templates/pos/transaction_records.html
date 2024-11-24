@@ -28,7 +28,7 @@
                 <p><strong>Products:</strong></p>
                 <ul>
                     {% for item in transaction.items.all %}
-                    <li>{{ item.product.name }} ({{ item.quantity_sold }})</li>
+                    <li>{{ item.product_version.product.product_name }} ({{ item.quantity_sold }})</li>
                     {% endfor %}
                 </ul>
                 <p><strong>Total Amount:</strong> ₱{{ transaction.total_price }}</p>
