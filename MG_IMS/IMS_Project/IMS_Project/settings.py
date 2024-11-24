@@ -38,9 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'MGSariSari_Inventory',  # Your main app
     'POS_APP',  # Additional app, if applicable
     'ProductManagement_APP',
+    'ExpensesTracker_APP',
 ]
 
 MIDDLEWARE = [
