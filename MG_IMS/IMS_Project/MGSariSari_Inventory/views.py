@@ -5,7 +5,8 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.db.models import Sum
-from POS_APP.models import Transaction, TransactionItem, Product
+from POS_APP.models import Transaction, TransactionItem
+from ProductManagement_APP.models import Product 
 from datetime import datetime
 import json
 from decimal import Decimal
@@ -86,7 +87,7 @@ def sales_summary(request):
             # Product-wise summary
             products_summary = {}
             for item in transaction_items:
-                product_name = item.product.name
+                product_name = item.product_version.product.product_name  # Access product via product_version
                 if product_name in products_summary:
                     products_summary[product_name]['quantity_sold'] += item.quantity_sold
                     products_summary[product_name]['total_price'] += item.get_total_price()
@@ -135,7 +136,7 @@ def sales_summary(request):
     yearly_transaction_items = TransactionItem.objects.filter(transaction__date__year=selected_year)
     yearly_products_summary = {}
     for item in yearly_transaction_items:
-        product_name = item.product.name
+        product_name = item.product_version.product.product_name  # Access product via product_version
         if product_name in yearly_products_summary:
             yearly_products_summary[product_name]['quantity_sold'] += item.quantity_sold
         else:
