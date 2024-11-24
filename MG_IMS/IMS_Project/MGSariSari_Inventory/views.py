@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.db.models import Sum
 from POS_APP.models import Transaction, TransactionItem
-from ProductManagement_APP.models import Product 
+from ProductManagement_APP.models import Product, Category, ProductVersion
 from datetime import datetime
 import json
 from decimal import Decimal
@@ -31,25 +31,48 @@ def register(request):
 
 @login_required
 def dashboard(request):
-    context = {
-        'categories': 7,
-        'products': 32,
-        'sales': 4500.00,
-        'top_products': [
-            {'name': 'BEV008', 'sales': 180},
-            {'name': 'BEV007', 'sales': 320},
-            {'name': 'BEV009', 'sales': 400},
-            {'name': 'BEV001', 'sales': 120},
-            {'name': 'BEV002', 'sales': 720},
-        ],
-        'product_list': [
-            '8 oz Coca Cola', '8 oz Sprite', '8 oz Royal', 
-            '1 L Coca Cola', '1 L Sprite', '1 L Royal', 
-            '1 L Red Horse', '1 L Emperador', 'Pilsen Grande'
-        ],
-    }
-    return render(request, 'MGSariSari_Inventory/dashboard.html', context)
+    # Current year for calculations
+    selected_year = datetime.now().year
 
+    # Calculate Total Yearly Sales
+    total_sales = Transaction.objects.filter(date__year=selected_year).aggregate(Sum('total_price'))['total_price__sum'] or decimal.Decimal(0)
+
+    # Top 5 Products Sold in the Year
+    yearly_transaction_items = TransactionItem.objects.filter(transaction__date__year=selected_year)
+    yearly_products_summary = {}
+    for item in yearly_transaction_items:
+        product_name = item.product_version.product.product_name  # Access product via product_version
+        if product_name in yearly_products_summary:
+            yearly_products_summary[product_name]['quantity_sold'] += item.quantity_sold
+        else:
+            yearly_products_summary[product_name] = {
+                'quantity_sold': item.quantity_sold,
+            }
+
+    # Prepare top 5 products for the year
+    sorted_yearly_products = sorted(yearly_products_summary.items(), key=lambda x: x[1]['quantity_sold'], reverse=True)[:5]
+    top_products_labels = [product for product, _ in sorted_yearly_products]
+    top_products_values = [details['quantity_sold'] for _, details in sorted_yearly_products]
+
+    # Total Number of Products and Categories from Product Management
+    total_products = Product.objects.count()
+    total_categories = Category.objects.count()
+
+    # Product List from Product Management
+    product_list = Product.objects.values_list('product_name', flat=True)
+
+    # Context for the template
+    context = {
+        'categories': total_categories,
+        'products': total_products,
+        'total_sales': total_sales,  # Total sales for the year
+        'top_products_labels_json': json.dumps(top_products_labels),
+        'top_products_values_json': json.dumps(top_products_values),
+        'product_list': product_list,
+    }
+
+    return render(request, 'MGSariSari_Inventory/dashboard.html', context)
+    
 def custom_logout(request):
     logout(request)
     return redirect('login')

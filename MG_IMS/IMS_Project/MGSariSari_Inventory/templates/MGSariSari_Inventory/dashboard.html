@@ -1,8 +1,197 @@
 {% extends 'MGSariSari_Inventory/base.html' %}
+{% load humanize %} <!-- Load the humanize library -->
 
 {% block title %}Dashboard - Inventory Management System{% endblock %}
 
 {% block content %}
-    <h3 class="dashboard-header">Dashboard</h3>
-    <p>Welcome to Mommy Grace Inventory Management System Dashboard. Use the sidebar to navigate through various features.</p>
+    <style>
+        /* General Dashboard Styles */
+        .container {
+            margin-top: 0px;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 20px;
+            text-align: center; /* Center the header */
+        }
+
+        /* Card Styles */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap; /* Ensure cards wrap on smaller screens */
+            gap: 20px;
+            justify-content: space-between; /* Space between cards to prevent overflow */
+        }
+
+        .card {
+            flex: 1 1 calc(32% - 20px); /* Cards take up roughly 32% of the container with a small gap */
+            padding: 20px;
+            min-width: 250px; /* Minimum width to ensure consistent card sizes */
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .card h4 {
+            margin: 0;
+            font-size: 24px;
+            color: #1AA488; /* Updated green color for headers */
+        }
+
+        .card p {
+            font-weight: bold;
+            font-size: 36px;
+            margin: 5px 0;
+            color: #333; /* Dark text for readability */
+        }
+
+        /* Chart and Product List */
+        .chart-product-list {
+            display: flex;
+            flex-wrap: wrap; /* Wrap on smaller screens */
+            gap: 20px;
+            margin-top: 20px;
+            justify-content: space-between; /* Ensure proper spacing on both sides */
+        }
+
+        .chart-container {
+            flex: 1 1 calc(60% - 20px); /* Take up 60% of the width, adapt on smaller screens */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            min-width: 300px; /* Minimum width to avoid overflow issues */
+            text-align: center;
+        }
+
+        .product-list {
+            flex: 1 1 calc(35% - 20px); /* Take up 35% of the width, adapt on smaller screens */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #1AA488;
+            color: white;
+            min-width: 250px; /* Minimum width to maintain list appearance */
+        }
+
+        .product-list h4 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .product-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .product-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .product-list li i {
+            font-size: 18px;
+        }
+
+        /* Responsive Design Adjustments */
+        @media (max-width: 768px) {
+            .card-container, .chart-product-list {
+                justify-content: center; /* Center cards and charts on smaller screens */
+            }
+
+            .card, .chart-container, .product-list {
+                flex: 1 1 100%; /* Full width on smaller screens */
+                max-width: 100%; /* Cap the width to prevent overflow */
+            }
+        }
+    </style>
+
+    <div class="container">
+        <div class="card-container">
+            <div class="card">
+                <div class="card-icon">📦</div>
+                <h4>Categories</h4>
+                <p>{{ categories }}</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🛒</div>
+                <h4>Products</h4>
+                <p>{{ products }}</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">💰</div>
+                <h4>Sales (Yearly Total)</h4>
+                <p>P{{ total_sales|floatformat:2|intcomma }}</p> <!-- Use yearly total from context -->
+            </div>
+        </div>
+
+        <div class="chart-product-list">
+            <!-- Top 5 Products Chart -->
+            <div class="chart-container">
+                <h4>Top 5 Products Sold</h4>
+                <canvas id="topProductsChart"></canvas>
+            </div>
+
+            <!-- Product List -->
+            <div class="product-list">
+                <h4>Product List</h4>
+                <ul>
+                    {% for product in product_list %}
+                    <li><i class="fa fa-cube"></i> {{ product }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Chart for Top 5 Products Sold
+            const topProductsChartElement = document.getElementById('topProductsChart');
+            if (topProductsChartElement) {
+                const topProductsChart = topProductsChartElement.getContext('2d');
+                const topProductsLabels = JSON.parse('{{ top_products_labels_json|escapejs }}');
+                const topProductsValues = JSON.parse('{{ top_products_values_json|escapejs }}');
+
+                if (topProductsLabels.length > 0 && topProductsValues.length > 0) {
+                    new Chart(topProductsChart, {
+                        type: 'bar',
+                        data: {
+                            labels: topProductsLabels,
+                            datasets: [{
+                                label: 'Total Sales',
+                                data: topProductsValues,
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    </script>
 {% endblock %}
