@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{% static 'css/sales.css' %}">
     <link rel="stylesheet" href="{% static 'inventory/dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'inventory/inventory.css' %}">
+    <link rel="stylesheet" href="{% static 'ExpensesTracker_APP/expensetracker.css' %}">
 
     <!-- Allow child templates to inject additional head elements -->
     {% block head %}{% endblock %}
@@ -187,7 +188,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="{% url 'expenses' %}">
+                    <a href="{% url 'ExpensesTracker_APP:expenses_tracker' %}">
                         <img src="{% static 'icons/expenses.png' %}" alt="Expenses Icon"
                             style="width: 20px; height: 20px;">
                         Expenses
