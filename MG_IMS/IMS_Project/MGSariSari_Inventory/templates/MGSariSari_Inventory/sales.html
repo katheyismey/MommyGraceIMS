@@ -1,16 +1,18 @@
 {% extends 'MGSariSari_Inventory/base.html' %}
+{% load humanize %}  <!-- Load the humanize library -->
 
 {% block title %}Sales Summary - Inventory Management System{% endblock %}
 
 {% block content %}
     <style>
+        /* Sales Tabs Button Styles - Return to Original */
         .sales-tabs button {
             padding: 10px;
             margin: 5px;
             border: none;
-            background-color: #f0f0f0;
+            background-color: #f0f0f0; /* Original light gray background */
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         .sales-tabs button.active {
@@ -18,18 +20,80 @@
             color: white;
         }
 
+        /* Show Sales Button Styles */
+        .date-picker button, .year-selector button {
+            padding: 8px 16px;
+            margin: 5px;
+            border: none;
+            background-color: #1AA488; /* Updated green color */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .date-picker button:hover, .year-selector button:hover {
+            background-color: #179d7a; /* Slightly darker green on hover */
+            transform: scale(1.05); /* Slight grow on hover */
+        }
+
+        /* Input Field Styles for Date and Year */
+        .date-picker input[type="date"], .year-selector input[type="number"] {
+            padding: 10px;
+            margin: 5px 0;
+            border: 2px solid #1AA488; /* Green border to match the buttons */
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .date-picker input[type="date"]:focus, .year-selector input[type="number"]:focus {
+            border-color: #179d7a; /* Darker green border on focus */
+            box-shadow: 0 0 5px rgba(23, 157, 122, 0.5); /* Green shadow on focus */
+            outline: none;
+        }
+
+        /* Sales Summary Section */
         .sales-summary {
             margin-top: 20px;
+        }
+
+        .sales-details {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .sales-details .sales-box {
+            flex: 1;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .sales-details h4 {
+            color: #1AA488; /* Use updated green color for headers */
+        }
+
+        .sales-details p {
+            font-weight: bold;
+            font-size: 24px;
         }
 
         .hidden {
             display: none;
         }
 
+        /* Chart Container */
         .chart-container {
             margin-top: 20px;
+            text-align: center; /* Center the chart titles */
         }
 
+        /* Products Table Styles */
         .products-table {
             width: 100%;
             border-collapse: collapse;
@@ -43,11 +107,10 @@
         }
 
         .products-table th {
-            background-color: #f2f2f2;
+            background-color: #1AA488; /* Updated green color for headers */
+            color: white;
         }
     </style>
-
-    <h3 class="dashboard-header">Sales</h3>
 
     <!-- Tabs for Daily and Monthly Summary -->
     <div class="sales-tabs">
@@ -65,19 +128,19 @@
             </form>
         </div>
         <div class="sales-details">
-            <div class="daily-sales">
+            <div class="sales-box">
                 <h4>Total Sales Today</h4>
-                <p>P{{ daily_total_sales|floatformat:2 }}</p>
+                <p>P{{ daily_total_sales|floatformat:2|intcomma }}</p>
             </div>
-            <div class="average-daily-sales">
+            <div class="sales-box">
                 <h4>Average Daily Sale</h4>
-                <p>P{{ average_daily_sales|floatformat:2 }}</p>
+                <p>P{{ average_daily_sales|floatformat:2|intcomma }}</p>
             </div>
         </div>
 
         <!-- Products Sold Today Table -->
         <div class="products-bought-today">
-            <h4>Products Sold Today</h4>
+            <h4><br>Products Sold Today</h4>
             <table class="products-table">
                 <thead>
                     <tr>
@@ -91,7 +154,7 @@
                     <tr>
                         <td>{{ product.name }}</td>
                         <td>{{ product.quantity_sold }}</td>
-                        <td>P{{ product.total_price|floatformat:2 }}</td>
+                        <td>P{{ product.total_price|floatformat:2|intcomma }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -107,19 +170,21 @@
 
     <!-- Monthly Sales Summary Section -->
     <div id="monthly-summary" class="sales-summary hidden">
-        <div class="summary-header">
-            <div class="year-selector">
-                <form method="get">
-                    <label for="select-year">Select Year:</label>
-                    <input type="number" id="select-year" name="select_year" min="2000" max="2100" value="{{ current_year }}">
-                    <button type="submit">Show Year</button>
-                </form>
+        <div class="year-selector">
+            <h3>Select Year:</h3>
+            <form method="get">
+                <input type="number" id="select-year" name="select_year" min="2000" max="2100" value="{{ current_year }}">
+                <button type="submit">Show Year</button>
+            </form>
+        </div>
+        <div class="sales-details">
+            <div class="sales-box">
+                <h4>Total Sales</h4>
+                <p>P{{ total_sales|floatformat:2|intcomma }}</p>
             </div>
-            <div class="total-sales">
-                <h4>Total Sales: P{{ total_sales|floatformat:2 }}</h4>
-            </div>
-            <div class="average-total-sales">
-                <h4>Average Total Sales: P{{ average_total_sales|floatformat:2 }}</h4>
+            <div class="sales-box">
+                <h4>Average Total Sales</h4>
+                <p>P{{ average_total_sales|floatformat:2|intcomma }}</p>
             </div>
         </div>
 
