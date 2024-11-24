@@ -261,3 +261,59 @@
     width: 16px; /* Adjust icon size */
     height: 16px; /* Match width and height */
 }
+
+/* Batch Search Container */
+.batch-search-container {
+    position: relative;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#batch-search {
+    border: 1px solid #ddd;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    background-color: #fff;
+}
+
+/* Batch Suggestions Dropdown */
+#batch-suggestions {
+    border: none;
+    margin-top: -1px;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    position: absolute;
+    width: 100%;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.batch-search-container .suggestion-item {
+    padding: 14px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.batch-search-container .suggestion-item:hover {
+    background-color: #f7f7f7;
+}
+
+#batch-search:focus {
+    box-shadow: none;
+    border-color: #ccc;
+}
+
+/* Additional alignment and spacing adjustments */
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}

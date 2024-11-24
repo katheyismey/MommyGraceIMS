@@ -11,7 +11,7 @@
 
 {% block content %}
 <div class="pos-container">
-    <!-- Left Side: Product Selection and Quantity -->
+    <!-- Left Side: Product and Batch Selection -->
     <div class="pos-left">
         <h2>Select Product</h2>
         <br>
@@ -29,14 +29,23 @@
                     <div id="product-suggestions" class="suggestions"></div>
                 </div>
 
-                <!-- Quantity Field Below Product Search -->
+                <!-- Batch Selection Field -->
+                <div class="batch-search-container">
+                    <input type="text" id="batch-search" placeholder="Select batch version..." autocomplete="off" disabled>
+                    <!-- Hidden field for selected batch ID -->
+                    <input type="hidden" name="product_version_id" id="selected-batch-id">
+                    <!-- Suggestions Box -->
+                    <div id="batch-suggestions" class="suggestions"></div>
+                </div>
+
+                <!-- Quantity Field Below Batch Search -->
                 <div class="quantity-container">
-                    <input type="number" name="quantity_sold" id="quantity-sold" placeholder="Add quantity" min="1">
+                    <input type="number" name="quantity_sold" id="quantity-sold" placeholder="Add quantity" min="1" disabled>
                 </div>
             </div>
 
             <!-- Add to Cart Button -->
-            <button type="submit" class="add-to-cart-button">Add to Cart</button>
+            <button type="submit" class="add-to-cart-button" disabled>Add to Cart</button>
         </form>
     </div>
 
@@ -53,6 +62,7 @@
             <thead>
                 <tr>
                     <th>Product Name</th>
+                    <th>Batch ID</th>
                     <th>Quantity</th>
                     <th>Unit Price</th>
                     <th>Total Price</th>
@@ -61,22 +71,23 @@
             </thead>
             <tbody id="cart-items">
                 {% for item in cart %}
-                <tr data-product-id="{{ item.product_id }}">
+                <tr data-product-version-id="{{ item.product_version_id }}">
                     <td>{{ item.product_name }}</td>
+                    <td>{{ item.batch_id }}</td>
                     <td>
-                        <button type="button" class="quantity-button" onclick="adjustQuantity('{{ item.product_id }}', -1)">-</button>
+                        <button type="button" class="quantity-button" onclick="adjustQuantity('{{ item.product_version_id }}', -1)">-</button>
                         <span class="quantity">{{ item.quantity }}</span>
-                        <button type="button" class="quantity-button" onclick="adjustQuantity('{{ item.product_id }}', 1)">+</button>
+                        <button type="button" class="quantity-button" onclick="adjustQuantity('{{ item.product_version_id }}', 1)">+</button>
                     </td>
                     <td>₱{{ item.price }}</td>
                     <td class="total-price">₱{{ item.quantity|multiply:item.price }}</td>
                     <td>
-                        <button type="button" class="remove-button" onclick="removeItem('{{ item.product_id }}')">Remove</button>
+                        <button type="button" class="remove-button" onclick="removeItem('{{ item.product_version_id }}')">Remove</button>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="empty-cart">No items in the cart.</td>
+                    <td colspan="6" class="empty-cart">No items in the cart.</td>
                 </tr>
                 {% endfor %}
             </tbody>
