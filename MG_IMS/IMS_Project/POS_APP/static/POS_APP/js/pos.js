@@ -28,10 +28,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fetch product suggestions
     function fetchProducts(query = "") {
         fetch(`/pos_app/search_products/?q=${query}`)
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 suggestionsBox.innerHTML = "";
-                data.forEach(product => {
+                data.forEach((product) => {
                     const suggestion = document.createElement("div");
                     suggestion.classList.add("suggestion-item");
                     suggestion.textContent = `${product.name}`;
@@ -44,10 +44,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fetch batch suggestions
     function fetchBatches(productId) {
         fetch(`/pos_app/search_batches/?product_id=${productId}`)
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 batchSuggestionsBox.innerHTML = "";
-                data.forEach(batch => {
+                data.forEach((batch) => {
                     const suggestion = document.createElement("div");
                     suggestion.classList.add("suggestion-item");
                     suggestion.textContent = `Batch ${batch.batch_id} - ₱${batch.price} (Stock: ${batch.stock})`;
@@ -78,16 +78,29 @@ document.addEventListener("DOMContentLoaded", function () {
             selectedBatchId.value = e.target.dataset.batchId;
             selectedBatchStock = parseInt(e.target.dataset.stock); // Update stock for validation
             batchSuggestionsBox.innerHTML = "";
-
+    
             // Enable quantity and add-to-cart button
             quantityField.disabled = false;
             addToCartButton.disabled = false;
-
+            fillMaxButton.disabled = false; // Enable the Max button
+    
             // Reset quantity field and enforce stock limit
             quantityField.value = 1;
             quantityField.max = selectedBatchStock;
         }
     });
+
+    // Handle Max Quantity Button
+const fillMaxButton = document.getElementById("fill-max-button");
+
+fillMaxButton.addEventListener("click", function () {
+    if (!selectedBatchStock) {
+        showNotice("No product batch is selected to set the max quantity.");
+        return;
+    }
+    quantityField.value = selectedBatchStock;
+    hideNotice();
+});
 
     // Validate quantity field input
     quantityField.addEventListener("input", function () {
@@ -148,45 +161,50 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Adjust Quantity in Cart
-    function adjustQuantity(productVersionId, delta) {
-        const row = document.querySelector(`tr[data-product-version-id="${productVersionId}"]`);
-        const quantitySpan = row.querySelector(".quantity");
-        let quantity = parseInt(quantitySpan.textContent);
-        const maxStock = parseInt(row.dataset.stock); // Max stock from dataset
+function adjustQuantity(productVersionId, delta) {
+    const row = document.querySelector(`tr[data-product-version-id="${productVersionId}"]`);
+    const quantitySpan = row.querySelector(".quantity");
+    let quantity = parseInt(quantitySpan.textContent);
+    const maxStock = parseInt(row.dataset.stock); // Max stock from dataset
 
-        if (delta === 1 && quantity >= maxStock) {
-            showNotice(`Cannot add more than ${maxStock} items for this product.`);
-            return;
-        }
+    if (delta === 1 && quantity >= maxStock) {
+        showNotice(`Cannot add more than ${maxStock} items for this product.`);
+        return; // Prevent further action if quantity exceeds stock
+    }
 
-        if (delta === -1 && quantity <= 1) {
-            showNotice("Quantity cannot be less than 1.");
-            return;
-        }
+    if (delta === -1 && quantity <= 1) {
+        showNotice("Quantity cannot be less than 1.");
+        return; // Prevent further action if quantity goes below 1
+    }
 
-        quantity += delta;
+    quantity += delta;
 
-        // Update the UI
-        quantitySpan.textContent = quantity;
-        const price = parseFloat(row.querySelector("td:nth-child(4)").textContent.replace("₱", ""));
-        const itemTotalPrice = row.querySelector(".total-price");
-        itemTotalPrice.textContent = `₱${(quantity * price).toFixed(2)}`;
-        updateTotal();
+    // Hide notice when conditions are valid
+    hideNotice();
 
-        // Update the server
-        fetch(`/pos_app/update_cart_item/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCsrfToken(),
-            },
-            body: JSON.stringify({ product_version_id: productVersionId, quantity }),
-        }).then(response => response.json()).then(data => {
+    // Update the UI
+    quantitySpan.textContent = quantity;
+    const price = parseFloat(row.querySelector("td:nth-child(4)").textContent.replace("₱", ""));
+    const itemTotalPrice = row.querySelector(".total-price");
+    itemTotalPrice.textContent = `₱${(quantity * price).toFixed(2)}`;
+    updateTotal();
+
+    // Update the server
+    fetch(`/pos_app/update_cart_item/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCsrfToken(),
+        },
+        body: JSON.stringify({ product_version_id: productVersionId, quantity }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
             if (!data.success) {
-                showNotice("Error updating cart item.");
+                showNotice(data.error || "Error updating cart item.");
             }
         });
-    }
+}
 
     function removeItem(productVersionId) {
         const row = document.querySelector(`tr[data-product-version-id="${productVersionId}"]`);
@@ -200,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "X-CSRFToken": getCsrfToken(),
             },
             body: JSON.stringify({ product_version_id: productVersionId }),
-        }).then(response => response.json()).then(data => {
+        }).then((response) => response.json()).then((data) => {
             if (!data.success) {
                 showNotice("Error removing item.");
             }
@@ -209,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateTotal() {
         let total = 0;
-        document.querySelectorAll("#cart-items tr").forEach(row => {
+        document.querySelectorAll("#cart-items tr").forEach((row) => {
             const quantity = parseInt(row.querySelector(".quantity").textContent);
             const price = parseFloat(row.querySelector("td:nth-child(4)").textContent.replace("₱", ""));
             total += quantity * price;
@@ -231,15 +249,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Content-Type": "application/json",
                 "X-CSRFToken": getCsrfToken(),
             },
-        }).then(response => response.json())
-          .then(data => {
-              if (!data.success) {
-                  showNotice("Error clearing the cart.");
-              }
-          }).catch(error => {
-              console.error("Error clearing the cart:", error);
-              showNotice("Unexpected error while clearing the cart.");
-          });
+        }).then((response) => response.json())
+            .then((data) => {
+                if (!data.success) {
+                    showNotice("Error clearing the cart.");
+                }
+            }).catch((error) => {
+                console.error("Error clearing the cart:", error);
+                showNotice("Unexpected error while clearing the cart.");
+            });
     };
 
     function getCsrfToken() {
