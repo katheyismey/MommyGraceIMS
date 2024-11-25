@@ -4,12 +4,186 @@
 {% block title %}Expenses Tracker{% endblock %}
 
 {% block content %}
-<h2>Total Expense: <span id="total-expense">{{ total_expense|floatformat:5|intcomma }}</span></h2>
+<style>
+    /* Integrated CSS from Inventory */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+    }
+
+    .content {
+        padding: 40px;
+    }
+
+    /* Header Styling */
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e0e6ed;
+    }
+
+    /* Expenses Tracker Styles */
+    .view-toggle {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .view-toggle button {
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        background-color: #ffffff;
+        color: #ffffff; /* Default button color */
+        /*transition: background-color 0.3s, color 0.3s;*/
+    }
+
+    .view-toggle button.active {
+        background-color: #1BA487; /* Active button background */
+        color: #FFF; /* White text for active button */
+    }
+
+    .view-toggle button:hover {
+        background-color: #1BA487; /* Green on hover */
+        color: #FFF; /* White text on hover */
+    }
+
+    /* Total Expense Box Styling */
+    .total-expense-box {
+        width: 40%; /* Reduced size */
+        background-color: #4caf50; /* Green background for total expenses */
+        color: #333; /* Text color */
+        text-align: center;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        margin: 0 auto 20px auto;
+    }
+
+    .total-expense-box h2 {
+        color: #fff;
+        font-size: 25px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .total-expense-box p {
+        font-weight: bold;
+        font-size: 20px;
+        color: #333;
+    }
+
+    /* Expenses Filter Form Styling */
+    .filter-form {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+
+    .filter-form label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .filter-form input[type="text"],
+    .filter-form input[type="date"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    .filter-form button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        background-color: #5cb6a4;
+        color: #FFF;
+        transition: background-color 0.3s;
+    }
+
+    .filter-form button:hover {
+        background-color: #128a6f;
+    }
+
+    /* Expenses Table View Styling */
+    .expenses-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #fff;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .expenses-table th,
+    .expenses-table td {
+        padding: 15px;
+        border: 1px solid #e0e6ed;
+        text-align: left;
+    }
+
+    .expenses-table th {
+        background-color: #056e59;
+        font-weight: bold;
+        color: #FFF;
+    }
+
+    .expenses-table tr:hover {
+        background-color: #92f0dd;
+    }
+
+    /* Graph Container */
+    #graph-view {
+        margin-top: 20px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .content {
+            padding: 20px;
+        }
+
+        .filter-form {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .expenses-table th,
+        .expenses-table td {
+            padding: 10px;
+        }
+
+        #current-view-label {
+            font-size: 18px;
+        }
+    }
+</style>
+
+<!-- Total Expense Box -->
+<div class="total-expense-box">
+    <h2>Total Expenses</h2>
+    <p>P{{ total_expense|floatformat:2|intcomma }}</p>
+</div>
 
 <!-- Switch Button to Toggle Between Table and Graph -->
 <div class="view-toggle">
-    <button id="toggle-table-view" onclick="toggleView('table')">Table View</button>
-    <button id="toggle-graph-view" onclick="toggleView('graph')">Graph View</button>
+    <button id="toggle-table-view" onclick="toggleView('table')" class="active">Expenses Table</button>
+    <button id="toggle-graph-view" onclick="toggleView('graph')">Expenses Graph</button>
 </div>
 
 <!-- Filter Form -->
@@ -46,7 +220,7 @@
                 <td>{{ log.date_added }}</td>
                 <td>{{ log.product_version }}</td>
                 <td>{{ log.quantity }}</td>
-                <td>{{ log.total_cost|floatformat:2|intcomma }}</td>
+                <td>P{{ log.total_cost|floatformat:2|intcomma }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -67,15 +241,21 @@
         const tableView = document.getElementById('table-view');
         const graphView = document.getElementById('graph-view');
         const currentViewLabel = document.getElementById('current-view-label');
+        const tableButton = document.getElementById('toggle-table-view');
+        const graphButton = document.getElementById('toggle-graph-view');
 
         if (view === 'table') {
             tableView.style.display = 'block';
             graphView.style.display = 'none';
-            currentViewLabel.textContent = 'Expenses Table';  // Update label
+            currentViewLabel.textContent = 'Expenses Table';
+            tableButton.classList.add('active');
+            graphButton.classList.remove('active');
         } else {
             tableView.style.display = 'none';
             graphView.style.display = 'block';
-            currentViewLabel.textContent = 'Expenses Graph';  // Update label
+            currentViewLabel.textContent = 'Expenses Graph';
+            tableButton.classList.remove('active');
+            graphButton.classList.add('active');
         }
     }
 
