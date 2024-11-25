@@ -115,7 +115,7 @@
 .total-amount {
     font-size: 18px;
     font-weight: bold;
-    margin-top: 20px;
+    margin-top: 100px;
     color: #333;
     display: flex;
     justify-content: space-between;
@@ -128,7 +128,7 @@
 
 .total-value {
     margin-left: auto; /* Aligns value to the right */
-    margin-right: 170px;
+    margin-right: 140px;
 }
 
 .complete-transaction-button, .cancel-transaction-button {

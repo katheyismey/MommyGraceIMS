@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Sum
 from ProductManagement_APP.models import Product, ProductVersion
 from .models import Transaction, TransactionItem
 from django.views.decorators.http import require_POST
@@ -149,14 +150,16 @@ def clear_cart(request):
 
 def transaction_records(request):
     query = request.GET.get('query', '')
-    transactions_list = Transaction.objects.prefetch_related('items__product_version__product').order_by('id')
+    transactions_list = Transaction.objects.prefetch_related('items__product_version__product').annotate(
+        total_items=Sum('items__quantity_sold')  # Annotate total items
+    ).order_by('id')
 
     if query.isdigit():
         transactions_list = transactions_list.filter(id=query)
     elif query:
         transactions_list = transactions_list.none()
 
-    paginator = Paginator(transactions_list, 9)
+    paginator = Paginator(transactions_list, 10)
     page = request.GET.get('page', 1)
 
     try:
@@ -168,3 +171,21 @@ def transaction_records(request):
         'transactions': transactions,
         'query': query
     })
+
+def transaction_details(request, transaction_id):
+    transaction = get_object_or_404(Transaction, id=transaction_id)
+    items = [
+        {
+            "product_name": item.product_version.product.product_name,
+            "quantity_sold": item.quantity_sold,
+            "selling_price": float(item.product_version.selling_price)
+        }
+        for item in transaction.items.all()
+    ]
+    data = {
+        "id": transaction.id,
+        "date": transaction.date.strftime("%Y-%m-%d %H:%M"),
+        "total_price": float(transaction.total_price),
+        "items": items
+    }
+    return JsonResponse(data)
