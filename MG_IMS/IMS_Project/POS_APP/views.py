@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 import json
 
 # GET Products and Product Versions for Transactions
+# Add to Cart in pos_view
 def pos_view(request):
     if request.method == "POST":
         product_version_id = request.POST.get('product_version_id')
@@ -15,11 +16,20 @@ def pos_view(request):
 
         if product_version_id and quantity:
             product_version = get_object_or_404(ProductVersion, id=product_version_id)
-            cart = request.session.get('cart', [])
+            
+            # Check stock availability
+            if quantity > product_version.product_quantity:
+                messages.error(request, f"Not enough stock for {product_version.product.product_name} (Batch: {product_version.batch_id}). Available: {product_version.product_quantity}.")
+                return redirect('POS_APP:pos')
 
+            cart = request.session.get('cart', [])
+            
             # Check if the product version is already in the cart
             existing_item = next((item for item in cart if item['product_version_id'] == product_version.id), None)
             if existing_item:
+                if existing_item['quantity'] + quantity > product_version.product_quantity:
+                    messages.error(request, f"Cannot add more than {product_version.product_quantity} items for {product_version.product.product_name} (Batch: {product_version.batch_id}).")
+                    return redirect('POS_APP:pos')
                 existing_item['quantity'] += quantity
             else:
                 cart.append({

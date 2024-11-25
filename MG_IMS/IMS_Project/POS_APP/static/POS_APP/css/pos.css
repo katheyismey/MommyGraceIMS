@@ -317,3 +317,27 @@
     flex-direction: column;
     gap: 15px;
 }
+.notice-box {
+    background-color: #ffcccc;
+    color: #990000;
+    border: 1px solid #990000;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notice-box span {
+    flex-grow: 1;
+}
+
+.notice-box button {
+    background-color: transparent;
+    border: none;
+    color: #990000;
+    font-size: 16px;
+    cursor: pointer;
+}
