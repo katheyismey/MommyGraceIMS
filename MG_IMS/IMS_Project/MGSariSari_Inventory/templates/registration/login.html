@@ -11,47 +11,47 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            background-color: #192227;
         }
 
         .login-container {
             width: 800px;
-            height: auto;
+            height: 450px; /* Consistent height */
             display: flex;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 8px; /* Adding some border radius for a smoother look */
+            border-radius: 8px;
         }
 
-        .login-left {
+        .left-panel {
             background-color: #1BA487;
             color: white;
             width: 40%;
-            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px;
             border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px; /* Ensure left side also has border radius */
+            border-bottom-left-radius: 8px;
         }
 
-        .login-left h1 {
-            font-size: 24px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .login-left img {
+        .left-panel img {
             width: 120px;
             height: 120px;
             margin-bottom: 20px;
         }
 
-        .login-right {
+        .left-panel h1 {
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .right-panel {
             background-color: white;
             width: 60%;
             padding: 40px;
@@ -59,20 +59,20 @@
             flex-direction: column;
             justify-content: center;
             border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px; /* Ensure right side also has border radius */
+            border-bottom-right-radius: 8px;
         }
 
-        .login-right h2 {
+        .right-panel h2 {
             text-align: center;
             margin-bottom: 20px;
         }
 
-        .login-right form {
+        .right-panel form {
             width: 100%;
         }
 
-        .login-right input[type="text"],
-        .login-right input[type="password"] {
+        .right-panel input[type="text"],
+        .right-panel input[type="password"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -80,7 +80,7 @@
             border-radius: 4px;
         }
 
-        .login-right input[type="submit"] {
+        .right-panel input[type="submit"] {
             width: 100%;
             padding: 10px;
             background-color: #333;
@@ -90,11 +90,11 @@
             cursor: pointer;
         }
 
-        .login-right input[type="submit"]:hover {
+        .right-panel input[type="submit"]:hover {
             background-color: #555;
         }
 
-        .login-right a {
+        .right-panel a {
             display: block;
             text-align: center;
             margin-top: 10px;
@@ -102,17 +102,21 @@
             text-decoration: none;
         }
 
-        .login-right a:hover {
+        .right-panel a:hover {
             text-decoration: underline;
         }
 
-        .error-messages {
-            color: red;
-            background-color: #ffe6e6;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            text-align: left; /* Left align error messages */
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            width: 800px; /* Same width as container */
         }
 
         .form-group {
@@ -128,29 +132,29 @@
     </style>
 </head>
 <body>
+
+    <!-- Error message as an alert above the container -->
+    {% if form.errors %}
+        <div class="alert-error">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="login-container">
-        <div class="login-left">
-            <img src="{% static 'icons/store_icon.png' %}" alt="Store Icon"> <!-- Image size has been increased -->
+        <div class="left-panel">
+            <img src="{% static 'icons/store_icon.png' %}" alt="Store Icon">
             <h1>MOMMY GRACE <br>SARI-SARI STORE</h1>
         </div>
-        <div class="login-right">
+        <div class="right-panel">
             <h2>Login into your account</h2>
 
-            <!-- Displaying error messages similar to register.html -->
-            {% if form.errors %}
-                <div class="error-messages">
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            <!-- Displaying form -->
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group">
@@ -164,7 +168,6 @@
                 <input type="submit" value="Sign In">
             </form>
 
-            <!-- Links for password reset and registration -->
             <a href="{% url 'register' %}" class="register-link">No account? Register here</a>
         </div>
     </div>
