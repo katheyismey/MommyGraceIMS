@@ -69,13 +69,22 @@
             flex: 1;
             padding: 20px;
             border-radius: 10px;
-            background-color: #f9f9f9;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             text-align: center;
+            color: white; /* Set text color to white for contrast */
+        }
+
+        .sales-details .sales-box.total-sales {
+            background-color: #4caf50 !important; /* Red background for Total Sales Today */
+        }
+
+        .sales-details .sales-box.average-sales {
+            background-color: #FFC107 !important; /* Yellow background for Average Daily Sale */
+            color: #333; /* Dark text for better contrast */
         }
 
         .sales-details h4 {
-            color: #1AA488; /* Use updated green color for headers */
+            color: white; /* Set header color to white for readability */
         }
 
         .sales-details p {
@@ -113,26 +122,28 @@
     </style>
 
     <!-- Tabs for Daily and Monthly Summary -->
-    <div class="sales-tabs">
-        <button id="daily-summary-btn" class="active" onclick="showDailySummary()">Daily Sales Summary</button>
-        <button id="monthly-summary-btn" onclick="showMonthlySummary()">Monthly Sales Summary</button>
-    </div>
+<div class="sales-tabs">
+    <button id="daily-summary-btn" class="active" onclick="showDailySummary()">Daily Sales Summary</button>
+    <button id="monthly-summary-btn" onclick="showMonthlySummary()">Monthly Sales Summary</button>
+</div>
 
-    <!-- Daily Sales Summary Section -->
-    <div id="daily-summary" class="sales-summary">
-        <div class="date-picker">
-            <h3>Select Date:</h3>
-            <form method="get">
-                <input type="date" id="selected-date" name="selected-date" value="{{ selected_date|default:'' }}">
-                <button type="submit">Show Sales</button>
-            </form>
-        </div>
+<!-- Daily Sales Summary Section -->
+<div id="daily-summary" class="sales-summary">
+    <div class="date-picker">
+        <h3>Select Date:</h3>
+        <form method="get" onsubmit="saveTabToLocalStorage('daily')">
+            <input type="date" id="selected-date" name="selected-date" value="{{ selected_date|default:'' }}">
+            <button type="submit">Show Sales</button>
+        </form>
+    </div>
         <div class="sales-details">
-            <div class="sales-box">
+            <!-- Total Sales Box with Red Background -->
+            <div class="sales-box total-sales">
                 <h4>Total Sales Today</h4>
                 <p>P{{ daily_total_sales|floatformat:2|intcomma }}</p>
             </div>
-            <div class="sales-box">
+            <!-- Average Daily Sales Box with Yellow Background -->
+            <div class="sales-box average-sales">
                 <h4>Average Daily Sale</h4>
                 <p>P{{ average_daily_sales|floatformat:2|intcomma }}</p>
             </div>
@@ -169,20 +180,20 @@
     </div>
 
     <!-- Monthly Sales Summary Section -->
-    <div id="monthly-summary" class="sales-summary hidden">
-        <div class="year-selector">
-            <h3>Select Year:</h3>
-            <form method="get">
-                <input type="number" id="select-year" name="select_year" min="2000" max="2100" value="{{ current_year }}">
-                <button type="submit">Show Year</button>
-            </form>
-        </div>
+<div id="monthly-summary" class="sales-summary hidden">
+    <div class="year-selector">
+        <h3>Select Year:</h3>
+        <form method="get" onsubmit="saveTabToLocalStorage('monthly')">
+            <input type="number" id="select-year" name="select_year" min="2000" max="2100" value="{{ current_year }}">
+            <button type="submit">Show Year</button>
+        </form>
+    </div>
         <div class="sales-details">
-            <div class="sales-box">
+            <div class="sales-box total-sales">
                 <h4>Total Sales</h4>
                 <p>P{{ total_sales|floatformat:2|intcomma }}</p>
             </div>
-            <div class="sales-box">
+            <div class="sales-box average-sales">
                 <h4>Average Total Sales</h4>
                 <p>P{{ average_total_sales|floatformat:2|intcomma }}</p>
             </div>
@@ -201,135 +212,131 @@
         </div>
     </div>
 
-    <!-- Include Chart.js Library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // JavaScript for Switching Tabs
-            document.getElementById("daily-summary-btn").addEventListener("click", function() {
-                showDailySummary();
-                localStorage.setItem('activeTab', 'daily');
+    <!-- JavaScript for Tabs and Charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // JavaScript for switching tabs and rendering charts
+    document.addEventListener("DOMContentLoaded", function () {
+        const activeTab = localStorage.getItem('activeTab');
+        if (activeTab === 'monthly') {
+            showMonthlySummary();
+        } else {
+            showDailySummary();
+        }
+    });
+
+    function showDailySummary() {
+        document.getElementById("daily-summary").classList.remove("hidden");
+        document.getElementById("monthly-summary").classList.add("hidden");
+        document.getElementById("daily-summary-btn").classList.add("active");
+        document.getElementById("monthly-summary-btn").classList.remove("active");
+        localStorage.setItem('activeTab', 'daily');
+    }
+
+    function showMonthlySummary() {
+        document.getElementById("monthly-summary").classList.remove("hidden");
+        document.getElementById("daily-summary").classList.add("hidden");
+        document.getElementById("monthly-summary-btn").classList.add("active");
+        document.getElementById("daily-summary-btn").classList.remove("active");
+        localStorage.setItem('activeTab', 'monthly');
+    }
+
+    function saveTabToLocalStorage(tabName) {
+        // Save the current active tab to localStorage before submitting the form
+        localStorage.setItem('activeTab', tabName);
+    }
+
+    // Chart for Top 5 Products Sold Today
+    const topProductsChartElement = document.getElementById('topProductsChart');
+    if (topProductsChartElement) {
+        const topProductsChart = topProductsChartElement.getContext('2d');
+        const topProductsLabels = JSON.parse('{{ top_products_labels_json|escapejs }}');
+        const topProductsValues = JSON.parse('{{ top_products_values_json|escapejs }}');
+
+        if (topProductsLabels.length > 0 && topProductsValues.length > 0) {
+            new Chart(topProductsChart, {
+                type: 'bar',
+                data: {
+                    labels: topProductsLabels,
+                    datasets: [{
+                        label: 'Units Sold',
+                        data: topProductsValues,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
             });
+        }
+    }
 
-            document.getElementById("monthly-summary-btn").addEventListener("click", function() {
-                showMonthlySummary();
-                localStorage.setItem('activeTab', 'monthly');
+    // Chart for Monthly Sales Summary
+    const monthlySalesChartElement = document.getElementById('monthlySalesChart');
+    if (monthlySalesChartElement) {
+        const monthlySalesChart = monthlySalesChartElement.getContext('2d');
+        const monthlySalesLabels = JSON.parse('{{ monthly_sales_labels|escapejs }}');
+        const monthlySalesValues = JSON.parse('{{ monthly_sales_values|escapejs }}');
+
+        if (monthlySalesLabels.length > 0 && monthlySalesValues.length > 0) {
+            new Chart(monthlySalesChart, {
+                type: 'line',
+                data: {
+                    labels: monthlySalesLabels,
+                    datasets: [{
+                        label: 'Total Sales',
+                        data: monthlySalesValues,
+                        backgroundColor: '#f44336',
+                        borderColor: '#f44336',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
             });
+        }
+    }
 
-            function showDailySummary() {
-                document.getElementById("daily-summary").classList.remove("hidden");
-                document.getElementById("monthly-summary").classList.add("hidden");
-                document.getElementById("daily-summary-btn").classList.add("active");
-                document.getElementById("monthly-summary-btn").classList.remove("active");
-            }
+    // Chart for Top 5 Products Sold in the Year
+    const topYearlyProductsChartElement = document.getElementById('topYearlyProductsChart');
+    if (topYearlyProductsChartElement) {
+        const topYearlyProductsChart = topYearlyProductsChartElement.getContext('2d');
+        const topYearlyProductsLabels = JSON.parse('{{ top_yearly_products_labels_json|escapejs }}');
+        const topYearlyProductsValues = JSON.parse('{{ top_yearly_products_values_json|escapejs }}');
 
-            function showMonthlySummary() {
-                document.getElementById("monthly-summary").classList.remove("hidden");
-                document.getElementById("daily-summary").classList.add("hidden");
-                document.getElementById("monthly-summary-btn").classList.add("active");
-                document.getElementById("daily-summary-btn").classList.remove("active");
-            }
-
-            // Check for active tab from localStorage
-            const activeTab = localStorage.getItem('activeTab');
-            if (activeTab === 'monthly') {
-                showMonthlySummary();
-            } else {
-                showDailySummary();  // Default to daily summary
-            }
-
-            // Chart for Top 5 Products Sold Today
-            const topProductsChartElement = document.getElementById('topProductsChart');
-            if (topProductsChartElement) {
-                const topProductsChart = topProductsChartElement.getContext('2d');
-                const topProductsLabels = JSON.parse('{{ top_products_labels_json|escapejs }}');
-                const topProductsValues = JSON.parse('{{ top_products_values_json|escapejs }}');
-
-                if (topProductsLabels.length > 0 && topProductsValues.length > 0) {
-                    new Chart(topProductsChart, {
-                        type: 'bar',
-                        data: {
-                            labels: topProductsLabels,
-                            datasets: [{
-                                label: 'Units Sold',
-                                data: topProductsValues,
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
+        if (topYearlyProductsLabels.length > 0 && topYearlyProductsValues.length > 0) {
+            new Chart(topYearlyProductsChart, {
+                type: 'bar',
+                data: {
+                    labels: topYearlyProductsLabels,
+                    datasets: [{
+                        label: 'Units Sold',
+                        data: topYearlyProductsValues,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
-                    });
+                    }
                 }
-            }
-
-            // Chart for Monthly Sales Summary
-            const monthlySalesChartElement = document.getElementById('monthlySalesChart');
-            if (monthlySalesChartElement) {
-                const monthlySalesChart = monthlySalesChartElement.getContext('2d');
-                const monthlySalesLabels = JSON.parse('{{ monthly_sales_labels|escapejs }}');
-                const monthlySalesValues = JSON.parse('{{ monthly_sales_values|escapejs }}');
-
-                if (monthlySalesLabels.length > 0 && monthlySalesValues.length > 0) {
-                    new Chart(monthlySalesChart, {
-                        type: 'line',
-                        data: {
-                            labels: monthlySalesLabels,
-                            datasets: [{
-                                label: 'Total Sales',
-                                data: monthlySalesValues,
-                                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                                borderColor: 'rgba(153, 102, 255, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-            // Chart for Top 5 Products Sold in the Year
-            const topYearlyProductsChartElement = document.getElementById('topYearlyProductsChart');
-            if (topYearlyProductsChartElement) {
-                const topYearlyProductsChart = topYearlyProductsChartElement.getContext('2d');
-                const topYearlyProductsLabels = JSON.parse('{{ top_yearly_products_labels_json|escapejs }}');
-                const topYearlyProductsValues = JSON.parse('{{ top_yearly_products_values_json|escapejs }}');
-
-                if (topYearlyProductsLabels.length > 0 && topYearlyProductsValues.length > 0) {
-                    new Chart(topYearlyProductsChart, {
-                        type: 'bar',
-                        data: {
-                            labels: topYearlyProductsLabels,
-                            datasets: [{
-                                label: 'Units Sold',
-                                data: topYearlyProductsValues,
-                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-        });
+            });
+        }
+    }
     </script>
 {% endblock %}
