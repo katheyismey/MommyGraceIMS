@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.db.models import Sum, Q
 from django.utils.timezone import now
+from ExpensesTracker_APP.models import ExpenseLog
 
 # Inventory list
 def inventory_list(request):
@@ -92,23 +93,35 @@ def add_product_version(request, product_id):
         form = ProductVersionForm(request.POST)
         if form.is_valid():
             supplier = form.cleaned_data['supplier']
+            product_quantity = form.cleaned_data['product_quantity']
+            buying_price = form.cleaned_data['buying_price']
+            
             # Create the new product version
-            ProductVersion.objects.create(
+            product_version = ProductVersion.objects.create(
                 product=product,
                 supplier=supplier,
-                buying_price=form.cleaned_data['buying_price'],
+                buying_price=buying_price,
                 selling_price=form.cleaned_data['selling_price'],
-                product_quantity=form.cleaned_data['product_quantity'],
+                product_quantity=product_quantity,
                 batch_id=form.cleaned_data['batch_id']
+            )
+            
+            # Log the expense
+            ExpenseLog.objects.create(
+                product_version=product_version,
+                quantity=product_quantity,
+                buying_price=buying_price,
+                total_cost=product_quantity * buying_price
             )
             return redirect('ProductManagement_APP:product_versions', product_id=product_id)
         else:
             messages.error(request, "There was an error with your form submission.")
     else:
         form = ProductVersionForm(initial={'product': product})
-    suppliers = Supplier.objects.all()  # Get all available suppliers
+    suppliers = Supplier.objects.all()
     return render(request, 'inventory/add_product_version.html', {'product': product, 'form': form, 'suppliers': suppliers})
 
+#Edit product Version
 def edit_product_version(request, version_id):
     version = get_object_or_404(ProductVersion, id=version_id)
     product_id = version.product.product_id  # Retrieve the product ID from the version object
@@ -173,10 +186,8 @@ def delete_category(request, category_id):
 def stock_in(request, version_id):
     version = get_object_or_404(ProductVersion, id=version_id)
     product_id = version.product.product_id
-    
-    # Filter stock logs for stock-in entries and order by timestamp
     stock_in_logs = version.stock_logs.filter(action_type='IN').order_by('-timestamp')
-    
+
     if request.method == 'POST':
         stock_in_amount = request.POST.get('stock_in_amount')
         if stock_in_amount:
@@ -187,13 +198,23 @@ def stock_in(request, version_id):
                 else:
                     version.product_quantity += stock_in_amount
                     version.save()
+                    
                     # Create a new StockLog entry
                     StockLog.objects.create(
-                        product_version=version,  # Update this field name if it's different in your model
+                        product_version=version,
                         action_type='IN',
                         quantity=stock_in_amount,
                         remarks=f"Added {stock_in_amount} units"
                     )
+                    
+                    # Log the expense
+                    ExpenseLog.objects.create(
+                        product_version=version,
+                        quantity=stock_in_amount,
+                        buying_price=version.buying_price,
+                        total_cost=stock_in_amount * version.buying_price
+                    )
+                    
                     messages.success(request, f"{stock_in_amount} units added to stock.")
                     return redirect('ProductManagement_APP:product_versions', product_id=product_id)
             except ValueError:
@@ -204,7 +225,7 @@ def stock_in(request, version_id):
         'version': version,
         'stock_in_logs': stock_in_logs,
     })
-
+    
 # Stock out
 def stock_out(request, version_id):
     version = get_object_or_404(ProductVersion, id=version_id)

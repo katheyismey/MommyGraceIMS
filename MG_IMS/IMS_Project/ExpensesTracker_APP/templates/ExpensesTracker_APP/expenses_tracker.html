@@ -1,0 +1,123 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+{% load humanize %}
+
+{% block title %}Expenses Tracker{% endblock %}
+
+{% block content %}
+<h2>Total Expense: <span id="total-expense">{{ total_expense|floatformat:5|intcomma }}</span></h2>
+
+<!-- Switch Button to Toggle Between Table and Graph -->
+<div class="view-toggle">
+    <button id="toggle-table-view" onclick="toggleView('table')">Table View</button>
+    <button id="toggle-graph-view" onclick="toggleView('graph')">Graph View</button>
+</div>
+
+<!-- Filter Form -->
+<form method="get" action="{% url 'ExpensesTracker_APP:expenses_tracker' %}" class="filter-form">
+    <label for="q">Search:</label>
+    <input type="text" id="q" name="q" value="{{ search_query }}" placeholder="Search product...">
+
+    <label for="start_date">Start Date:</label>
+    <input type="date" id="start_date" name="start_date" value="{{ start_date }}">
+
+    <label for="end_date">End Date:</label>
+    <input type="date" id="end_date" name="end_date" value="{{ end_date }}">
+
+    <button type="submit">Filter</button>
+</form>
+
+<!-- Dynamic Label for Current View -->
+<h3 id="current-view-label">Expenses Table</h3>
+
+<!-- Expenses Table View -->
+<div id="table-view" class="view" style="display: block;">
+    <table class="expenses-table">
+        <thead>
+            <tr>
+                <th>Date Added</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in expense_logs %}
+            <tr>
+                <td>{{ log.date_added }}</td>
+                <td>{{ log.product_version }}</td>
+                <td>{{ log.quantity }}</td>
+                <td>{{ log.total_cost|floatformat:2|intcomma }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Expenses Graph View -->
+<div id="graph-view" class="view" style="display: none;">
+    <canvas id="expensesChart"></canvas>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- JavaScript to Toggle Views and Render the Chart -->
+<script>
+    function toggleView(view) {
+        const tableView = document.getElementById('table-view');
+        const graphView = document.getElementById('graph-view');
+        const currentViewLabel = document.getElementById('current-view-label');
+
+        if (view === 'table') {
+            tableView.style.display = 'block';
+            graphView.style.display = 'none';
+            currentViewLabel.textContent = 'Expenses Table';  // Update label
+        } else {
+            tableView.style.display = 'none';
+            graphView.style.display = 'block';
+            currentViewLabel.textContent = 'Expenses Graph';  // Update label
+        }
+    }
+
+    // Render chart if there are expenses
+    var ctx = document.getElementById('expensesChart').getContext('2d');
+
+    if ({{ expenses|length }} > 0) {
+        var expenseChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ labels|safe }},
+                datasets: [{
+                    label: 'Daily Expenses',
+                    data: {{ expenses|safe }},
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'category',
+                        labels: {{ labels|safe }},
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Total Expense'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    } else {
+        console.log('No expenses to display.');
+    }
+</script>
+
+{% endblock %}
