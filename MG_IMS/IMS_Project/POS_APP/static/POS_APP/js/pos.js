@@ -28,10 +28,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fetch product suggestions
     function fetchProducts(query = "") {
         fetch(`/pos_app/search_products/?q=${query}`)
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 suggestionsBox.innerHTML = "";
-                data.forEach(product => {
+                data.forEach((product) => {
                     const suggestion = document.createElement("div");
                     suggestion.classList.add("suggestion-item");
                     suggestion.textContent = `${product.name}`;
@@ -44,10 +44,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fetch batch suggestions
     function fetchBatches(productId) {
         fetch(`/pos_app/search_batches/?product_id=${productId}`)
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 batchSuggestionsBox.innerHTML = "";
-                data.forEach(batch => {
+                data.forEach((batch) => {
                     const suggestion = document.createElement("div");
                     suggestion.classList.add("suggestion-item");
                     suggestion.textContent = `Batch ${batch.batch_id} - ₱${batch.price} (Stock: ${batch.stock})`;
@@ -156,12 +156,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (delta === 1 && quantity >= maxStock) {
             showNotice(`Cannot add more than ${maxStock} items for this product.`);
-            return;
+            return; // Prevent further action if quantity exceeds stock
         }
 
         if (delta === -1 && quantity <= 1) {
             showNotice("Quantity cannot be less than 1.");
-            return;
+            return; // Prevent further action if quantity goes below 1
         }
 
         quantity += delta;
@@ -181,9 +181,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 "X-CSRFToken": getCsrfToken(),
             },
             body: JSON.stringify({ product_version_id: productVersionId, quantity }),
-        }).then(response => response.json()).then(data => {
+        }).then((response) => response.json()).then((data) => {
             if (!data.success) {
-                showNotice("Error updating cart item.");
+                showNotice(data.error || "Error updating cart item.");
             }
         });
     }
@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "X-CSRFToken": getCsrfToken(),
             },
             body: JSON.stringify({ product_version_id: productVersionId }),
-        }).then(response => response.json()).then(data => {
+        }).then((response) => response.json()).then((data) => {
             if (!data.success) {
                 showNotice("Error removing item.");
             }
@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateTotal() {
         let total = 0;
-        document.querySelectorAll("#cart-items tr").forEach(row => {
+        document.querySelectorAll("#cart-items tr").forEach((row) => {
             const quantity = parseInt(row.querySelector(".quantity").textContent);
             const price = parseFloat(row.querySelector("td:nth-child(4)").textContent.replace("₱", ""));
             total += quantity * price;
@@ -231,15 +231,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Content-Type": "application/json",
                 "X-CSRFToken": getCsrfToken(),
             },
-        }).then(response => response.json())
-          .then(data => {
-              if (!data.success) {
-                  showNotice("Error clearing the cart.");
-              }
-          }).catch(error => {
-              console.error("Error clearing the cart:", error);
-              showNotice("Unexpected error while clearing the cart.");
-          });
+        }).then((response) => response.json())
+            .then((data) => {
+                if (!data.success) {
+                    showNotice("Error clearing the cart.");
+                }
+            }).catch((error) => {
+                console.error("Error clearing the cart:", error);
+                showNotice("Unexpected error while clearing the cart.");
+            });
     };
 
     function getCsrfToken() {

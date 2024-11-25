@@ -75,7 +75,7 @@
             </thead>
             <tbody id="cart-items">
                 {% for item in cart %}
-                <tr data-product-version-id="{{ item.product_version_id }}">
+                <tr data-product-version-id="{{ item.product_version_id }}" data-stock="{{ item.stock }}">
                     <td>{{ item.product_name }}</td>
                     <td>{{ item.batch_id }}</td>
                     <td>

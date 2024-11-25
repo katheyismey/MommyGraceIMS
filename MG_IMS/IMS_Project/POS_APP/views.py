@@ -114,6 +114,15 @@ def update_cart_item(request):
     quantity = data.get('quantity')
 
     if product_version_id and quantity is not None:
+        product_version = get_object_or_404(ProductVersion, id=product_version_id)
+
+        # Validate against available stock
+        if quantity > product_version.product_quantity:
+            return JsonResponse({
+                "success": False,
+                "error": f"Cannot exceed stock of {product_version.product_quantity} for this product."
+            })
+
         cart = request.session.get('cart', [])
         for item in cart:
             if item['product_version_id'] == int(product_version_id):
