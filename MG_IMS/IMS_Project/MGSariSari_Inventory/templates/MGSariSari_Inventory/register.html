@@ -5,44 +5,168 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Mommy Grace Sari-Sari Store</title>
-    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <style>
+        /* Basic styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #192227;
+        }
+
+        .register-container {
+            width: 800px;
+            height: 450px; /* Consistent height */
+            display: flex;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .right-panel {
+            background-color: white;
+            width: 60%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .right-panel h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .right-panel form {
+            width: 100%;
+        }
+
+        .right-panel input[type="text"],
+        .right-panel input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .right-panel button {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .right-panel button:hover {
+            background-color: #555;
+        }
+
+        .right-panel a {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .right-panel a:hover {
+            text-decoration: underline;
+        }
+
+        .error-messages {
+            color: red;
+            background-color: #ffe6e6;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 5px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .left-panel {
+            background-color: #1BA487;
+            color: white;
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        .left-panel img {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+        }
+
+        .left-panel h1 {
+            font-size: 24px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <div class="wrapper">
     <div class="register-container">
-        <h2>Create a New Account</h2>
+        <div class="left-panel">
+            <img src="{% static 'icons/store_icon.png' %}" alt="Store Icon">
+            <h1>MOMMY GRACE <br>SARI-SARI STORE</h1>
+        </div>
 
-        {% if form.errors %}
-            <div class="error-messages">
-                {% for field in form %}
-                    {% for error in field.errors %}
+        <div class="right-panel">
+            <h2>Create a New Account</h2>
+
+            {% if form.errors %}
+                <div class="error-messages">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
-                {% endfor %}
-                {% for error in form.non_field_errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
+                </div>
+            {% endif %}
 
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_username">Username:</label>
-                {{ form.username }}
-            </div>
-            <div class="form-group">
-                <label for="id_password1">Password:</label>
-                {{ form.password1 }}
-            </div>
-            <div class="form-group">
-                <label for="id_password2">Password confirmation:</label>
-                {{ form.password2 }}
-            </div>
-            <button type="submit">Register</button>
-        </form>
-        <p>Already have an account? <a href="{% url 'login' %}">Log in here</a>.</p>
-    </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_username">Username:</label>
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    <label for="id_password1">Password:</label>
+                    {{ form.password1 }}
+                </div>
+                <div class="form-group">
+                    <label for="id_password2">Password confirmation:</label>
+                    {{ form.password2 }}
+                </div>
+                <button type="submit">Register</button>
+            </form>
+            <p><a href="{% url 'login' %}">Already have an account?  Log in here</a>.</p>
+        </div>
     </div>
 </body>
 </html>
