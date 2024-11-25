@@ -8,22 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const quantityField = document.getElementById("quantity-sold");
     const addToCartButton = document.querySelector(".add-to-cart-button");
     const totalAmount = document.getElementById("total");
-    const noticeBox = document.getElementById("notice-box");
-    const noticeMessage = document.getElementById("notice-message");
-
-    let selectedBatchStock = 0; // Track the stock for the selected batch
-
-    // Utility: Show notice box
-    function showNotice(message) {
-        noticeMessage.textContent = message;
-        noticeBox.style.display = "block";
-    }
-
-    // Utility: Hide notice box
-    function hideNotice() {
-        noticeBox.style.display = "none";
-        noticeMessage.textContent = "";
-    }
 
     // Fetch product suggestions
     function fetchProducts(query = "") {
@@ -52,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     suggestion.classList.add("suggestion-item");
                     suggestion.textContent = `Batch ${batch.batch_id} - ₱${batch.price} (Stock: ${batch.stock})`;
                     suggestion.dataset.batchId = batch.id;
-                    suggestion.dataset.stock = batch.stock; // Include stock for validation
                     batchSuggestionsBox.appendChild(suggestion);
                 });
             });
@@ -76,30 +59,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.target && e.target.matches(".suggestion-item")) {
             batchSearch.value = e.target.textContent;
             selectedBatchId.value = e.target.dataset.batchId;
-            selectedBatchStock = parseInt(e.target.dataset.stock); // Update stock for validation
             batchSuggestionsBox.innerHTML = "";
 
             // Enable quantity and add-to-cart button
             quantityField.disabled = false;
             addToCartButton.disabled = false;
-
-            // Reset quantity field and enforce stock limit
-            quantityField.value = 1;
-            quantityField.max = selectedBatchStock;
-        }
-    });
-
-    // Validate quantity field input
-    quantityField.addEventListener("input", function () {
-        const enteredQuantity = parseInt(quantityField.value);
-        if (enteredQuantity > selectedBatchStock) {
-            showNotice(`You cannot add more than ${selectedBatchStock} items for this batch.`);
-            quantityField.value = selectedBatchStock;
-        } else if (enteredQuantity < 1) {
-            showNotice("Quantity cannot be less than 1.");
-            quantityField.value = 1;
-        } else {
-            hideNotice();
         }
     });
 
@@ -147,45 +111,31 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Adjust Quantity in Cart
     function adjustQuantity(productVersionId, delta) {
         const row = document.querySelector(`tr[data-product-version-id="${productVersionId}"]`);
         const quantitySpan = row.querySelector(".quantity");
-        let quantity = parseInt(quantitySpan.textContent);
-        const maxStock = parseInt(row.dataset.stock); // Max stock from dataset
+        let quantity = parseInt(quantitySpan.textContent) + delta;
 
-        if (delta === 1 && quantity >= maxStock) {
-            showNotice(`Cannot add more than ${maxStock} items for this product.`);
-            return;
+        if (quantity > 0) {
+            quantitySpan.textContent = quantity;
+            const price = parseFloat(row.querySelector("td:nth-child(4)").textContent.replace("₱", ""));
+            const itemTotalPrice = row.querySelector(".total-price");
+            itemTotalPrice.textContent = `₱${(quantity * price).toFixed(2)}`;
+            updateTotal();
+
+            fetch(`/pos_app/update_cart_item/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCsrfToken(),
+                },
+                body: JSON.stringify({ product_version_id: productVersionId, quantity }),
+            }).then(response => response.json()).then(data => {
+                if (!data.success) {
+                    alert("Error updating cart item.");
+                }
+            });
         }
-
-        if (delta === -1 && quantity <= 1) {
-            showNotice("Quantity cannot be less than 1.");
-            return;
-        }
-
-        quantity += delta;
-
-        // Update the UI
-        quantitySpan.textContent = quantity;
-        const price = parseFloat(row.querySelector("td:nth-child(4)").textContent.replace("₱", ""));
-        const itemTotalPrice = row.querySelector(".total-price");
-        itemTotalPrice.textContent = `₱${(quantity * price).toFixed(2)}`;
-        updateTotal();
-
-        // Update the server
-        fetch(`/pos_app/update_cart_item/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCsrfToken(),
-            },
-            body: JSON.stringify({ product_version_id: productVersionId, quantity }),
-        }).then(response => response.json()).then(data => {
-            if (!data.success) {
-                showNotice("Error updating cart item.");
-            }
-        });
     }
 
     function removeItem(productVersionId) {
@@ -202,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
             body: JSON.stringify({ product_version_id: productVersionId }),
         }).then(response => response.json()).then(data => {
             if (!data.success) {
-                showNotice("Error removing item.");
+                alert("Error removing item.");
             }
         });
     }
@@ -218,6 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     window.clearCart = function () {
+        // Clear the UI cart table
         const cartItemsContainer = document.getElementById("cart-items");
         cartItemsContainer.innerHTML = `
             <tr>
@@ -225,6 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </tr>`;
         totalAmount.textContent = "0.00";
 
+        // Send the request to clear the server-side cart
         fetch(`/pos_app/clear_cart/`, {
             method: "POST",
             headers: {
@@ -234,15 +186,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }).then(response => response.json())
           .then(data => {
               if (!data.success) {
-                  showNotice("Error clearing the cart.");
+                  alert("Error clearing the cart.");
               }
           }).catch(error => {
               console.error("Error clearing the cart:", error);
-              showNotice("Unexpected error while clearing the cart.");
           });
     };
 
     function getCsrfToken() {
         return document.querySelector("[name=csrfmiddlewaretoken]").value;
     }
+
 });
