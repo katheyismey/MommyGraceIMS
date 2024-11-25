@@ -44,7 +44,11 @@
 
                 <!-- Quantity Field Below Batch Search -->
                 <div class="quantity-container">
-                    <input type="number" name="quantity_sold" id="quantity-sold" placeholder="Add quantity" min="1" disabled>
+                    <div class="quantity-row">
+                        <input type="number" name="quantity_sold" id="quantity-sold" placeholder="Add quantity" min="1" disabled>
+                        <!-- New button to fill max quantity -->
+                        <button type="button" id="fill-max-button" class="fill-max-button" disabled>Max</button>
+                    </div>
                 </div>
             </div>
 
