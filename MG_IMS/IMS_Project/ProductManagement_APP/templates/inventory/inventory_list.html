@@ -3,53 +3,46 @@
 {% block title %}Inventory{% endblock %}
 
 {% block content %}
+<h2>Products</h2>
 <div class="inventory-container">
-    <h1>Inventory</h1>
-
-  <!-- Category Management Section -->
-  <div class="category-actions">
-    <!-- Add Category Button -->
-    <form action="{% url 'ProductManagement_APP:add_category' %}" method="get">
-        <button type="submit" class="button add-category">Add Category</button>
-    </form>
-
-    <!-- Dropdown to select category -->
-    <form method="get" action="{% url 'ProductManagement_APP:inventory_list' %}">
-        <label for="category_select">Choose Category:</label>
-        <select id="category_select" name="selected_category" onchange="this.form.submit()">
-            <option value="">All Products</option>
-            {% for category in categories %}
-                <option value="{{ category.id }}" {% if category.id == selected_category %}selected{% endif %}>
-                    {{ category.name }}
-                </option>
-            {% endfor %}
-        </select>
-    </form>
-
-    {% if selected_category %}
-        <!-- Edit and Delete buttons for selected category -->
-        <form action="{% url 'ProductManagement_APP:edit_category' selected_category %}" method="get" style="display:inline;">
-            <button type="submit" class="button edit-category">Edit Category</button>
+    <!-- Combined Actions Section for Category, Supplier, and Product -->
+    <div class="category-actions">
+        <!-- Add Category, Supplier, and Product Buttons in One Line -->
+        <form action="{% url 'ProductManagement_APP:add_category' %}" method="get" style="display:inline;">
+            <button type="submit" class="button add-category">Add Category</button>
         </form>
-        <form action="{% url 'ProductManagement_APP:delete_category' selected_category %}" method="get" style="display:inline;">
-            <button type="submit" class="button delete-category">Delete Category</button>
-        </form>
-    {% endif %}
-</div>
-
-    <!-- Supplier Management Section -->
-    <div class="supplier-actions">
-        <form action="{% url 'ProductManagement_APP:add_supplier' %}" method="get">
+        <form action="{% url 'ProductManagement_APP:add_supplier' %}" method="get" style="display:inline;">
             <button type="submit" class="button add-supplier">Add Supplier</button>
+        </form>
+        <form action="{% url 'ProductManagement_APP:add_product' %}" method="get" style="display:inline;">
+            <button type="submit" class="button add-product">Add Product</button>
         </form>
     </div>
 
-     <!-- Product Management Buttons -->
-     <div class="product-actions">
-        <h2>Products</h2>
-        <form action="{% url 'ProductManagement_APP:add_product' %}" method="get">
-            <button type="submit" class="button add-product">Add Product</button>
+    <!-- Product Management Section with Category Selection -->
+    <div class="product-actions">
+        <!-- Dropdown to select category beside "Products" -->
+        <form method="get" action="{% url 'ProductManagement_APP:inventory_list' %}" style="display: flex; align-items: center; gap: 15px;">
+            <label for="category_select">Choose Category:</label>
+            <select id="category_select" name="selected_category" onchange="this.form.submit()">
+                <option value="">All Products</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category.id == selected_category %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
         </form>
+        
+        <!-- Edit and Delete buttons for selected category -->
+        {% if selected_category %}
+            <form action="{% url 'ProductManagement_APP:edit_category' selected_category %}" method="get" style="display:inline;">
+                <button type="submit" class="button edit-category">Edit Category</button>
+            </form>
+            <form action="{% url 'ProductManagement_APP:delete_category' selected_category %}" method="get" style="display:inline;">
+                <button type="submit" class="button delete-category">Delete Category</button>
+            </form>
+        {% endif %}
     </div>
 
     <!-- Search Bar -->
@@ -103,4 +96,5 @@
         </tbody>
     </table>
 </div>
+
 {% endblock %}

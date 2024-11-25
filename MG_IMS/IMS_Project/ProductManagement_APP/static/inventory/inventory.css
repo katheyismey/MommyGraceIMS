@@ -93,7 +93,8 @@ label {
 }
 
 /* Specific Button Styles */
-.add-category {
+.add-category,.add-supplier,
+.add-product  {
     background-color: #4CAF50;; /* Match the general button style */
     color: #FFF;
 }
