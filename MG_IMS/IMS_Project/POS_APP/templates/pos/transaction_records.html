@@ -9,35 +9,45 @@
 
 {% block content %}
 <div class="transaction-records-container">
-        <h2>Transaction Records</h2>
-        <a href="{% url 'POS_APP:pos' %}" class="back-link">Back</a>
-        <!-- Search Form -->
-        <form method="get" class="search-form">
-            <input type="text" name="query" placeholder="Search by Transaction ID" value="{{ query }}">
-            <button type="submit">Search</button>
-            <a href="{% url 'POS_APP:transaction_records' %}" class="clear-button">Clear</a>
-        </form>
-    <div class="records-cards">
-        {% for transaction in transactions %}
-        <div class="transaction-card">
-            <div class="transaction-header">
-                <h3>Transaction ID: {{ transaction.id }}</h3>
-                <span class="transaction-date">{{ transaction.date|date:"Y-m-d H:i" }}</span>
-            </div>
-            <div class="transaction-body">              
-                <p><strong>Products:</strong></p>
-                <ul>
-                    {% for item in transaction.items.all %}
-                    <li>{{ item.product_version.product.product_name }} ({{ item.quantity_sold }})</li>
-                    {% endfor %}
-                </ul>
-                <p><strong>Total Amount:</strong> ₱{{ transaction.total_price }}</p>
-            </div>
-        </div>
-        {% empty %}
-        <p>No transactions available.</p>
-        {% endfor %}
-    </div>
+    <h2>Transaction Records</h2>
+    <a href="{% url 'POS_APP:pos' %}" class="back-link">Back</a>
+
+    <!-- Search Form -->
+    <form method="get" class="search-form">
+        <input type="text" name="query" placeholder="Search by Transaction ID" value="{{ query }}">
+        <button type="submit">Search</button>
+        <a href="{% url 'POS_APP:transaction_records' %}" class="clear-button">Clear</a>
+    </form>
+
+    <!-- Transactions Table -->
+    <table class="transactions-table">
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Date</th>
+                <th>No Of Items</th>
+                <th>Total Amount</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.id }}</td>
+                <td>{{ transaction.date|date:"Y-m-d H:i" }}</td>
+                <td>{{ transaction.total_items }} Items</td>
+                <td>₱{{ transaction.total_price }}</td>
+                <td>
+                    <button class="view-details-button" onclick="openModal('{{ transaction.id }}')">View Details</button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center;">No transactions available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <!-- Pagination Controls -->
     <div class="pagination">
@@ -54,4 +64,39 @@
         {% endif %}
     </div>
 </div>
+
+<!-- Transaction Details Modal -->
+<div id="transaction-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h3>Transaction Details</h3>
+        <div id="transaction-details"></div>
+    </div>
+</div>
+
+<script>
+    function openModal(transactionId) {
+        fetch(`/pos_app/transaction_details/${transactionId}/`)
+            .then(response => response.json())
+            .then(data => {
+                const detailsContainer = document.getElementById('transaction-details');
+                detailsContainer.innerHTML = `
+                    <p><strong>Transaction ID:</strong> ${data.id}</p>
+                    <p><strong>Date:</strong> ${data.date}</p>                   
+                    <p><strong>Products:</strong></p>
+                    <ul>
+                        ${data.items.map(item => `
+                            <li>${item.product_name} | ${item.quantity_sold} units | ₱${item.selling_price}</li>
+                        `).join('')}
+                    </ul>
+                    <p><strong>Total Amount:</strong> ₱${data.total_price}</p>
+                `;
+                document.getElementById('transaction-modal').style.display = 'block';
+            });
+    }
+
+    function closeModal() {
+        document.getElementById('transaction-modal').style.display = 'none';
+    }
+</script>
 {% endblock %}
