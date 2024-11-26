@@ -115,7 +115,7 @@
 .total-amount {
     font-size: 18px;
     font-weight: bold;
-    margin-top: 100px;
+    margin-top: 60px;
     color: #333;
     display: flex;
     justify-content: space-between;
@@ -131,10 +131,38 @@
     margin-right: 140px;
 }
 
-.complete-transaction-button, .cancel-transaction-button {
-    width: 49%;
+/* Cancel Transaction Button */
+.cancel-transaction-button {
+    width: 100%; /* Full width */
     padding: 12px;
     margin-top: 10px;
+    margin-bottom: 10px; /* Add spacing below */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #dc3545; /* Red color */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cancel-transaction-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+    transform: translateY(-2px); /* Subtle hover effect */
+}
+
+/* Transaction Actions Container */
+.transaction-actions {
+    display: flex;
+    justify-content: space-between; /* Space evenly between buttons */
+    gap: 10px; /* Add spacing between buttons */
+}
+
+/* Pay Later and Complete Transaction Buttons */
+.pay-later-button,
+.complete-transaction-button {
+    flex: 1; /* Equal width for both buttons */
+    padding: 12px;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -143,21 +171,23 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.complete-transaction-button {
-    background-color: #007bff;
+/* Pay Later Button */
+.pay-later-button {
+    background-color: #007bff; /* Gray color for Pay Later */
 }
 
-.complete-transaction-button:hover {
-    background-color: #0056b3;
+.pay-later-button:hover {
+    background-color: #0056b3; /* Darker gray on hover */
     transform: translateY(-2px);
 }
 
-.cancel-transaction-button {
-    background-color: #dc3545;
+/* Complete Transaction Button */
+.complete-transaction-button {
+    background-color: #007bff; /* Blue color */
 }
 
-.cancel-transaction-button:hover {
-    background-color: #c82333;
+.complete-transaction-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
     transform: translateY(-2px);
 }
 
