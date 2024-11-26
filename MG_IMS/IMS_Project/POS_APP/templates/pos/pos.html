@@ -108,8 +108,14 @@
 
         <form method="post" action="{% url 'POS_APP:complete_transaction' %}">
             {% csrf_token %}
+            <!-- Cancel Transaction Button -->
             <button type="button" class="cancel-transaction-button" onclick="clearCart()">Cancel Transaction</button>
-            <button type="submit" class="complete-transaction-button">Complete Transaction</button>
+        
+            <!-- Pay Later and Complete Transaction Buttons -->
+            <div class="transaction-actions">
+                <button type="submit" class="pay-later-button">Pay Later</button>
+                <button type="submit" class="complete-transaction-button">Complete Transaction</button>
+            </div>
         </form>
     </div>
 </div>

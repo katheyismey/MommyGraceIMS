@@ -40,9 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'MGSariSari_Inventory',  # Your main app
-    'POS_APP',  # Additional app, if applicable
+    'POS_APP', 
     'ProductManagement_APP',
     'ExpensesTracker_APP',
+    'Debt_Management',
 ]
 
 MIDDLEWARE = [
