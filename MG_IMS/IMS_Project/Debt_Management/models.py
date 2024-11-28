@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from decimal import Decimal
-
+from POS_APP.models import Transaction 
 
 # Customer Model
 class Customer(models.Model):
@@ -18,7 +18,7 @@ class Customer(models.Model):
 # Debt Model
 class Debt(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='debts')
-    transaction_id = models.CharField(max_length=50, unique=True)  # Can be linked to a transaction ID
+    transaction = models.OneToOneField(Transaction, on_delete=models.CASCADE, related_name='debt')  # Link to Transaction
     amount_due = models.DecimalField(max_digits=10, decimal_places=2)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     due_date = models.DateField()
