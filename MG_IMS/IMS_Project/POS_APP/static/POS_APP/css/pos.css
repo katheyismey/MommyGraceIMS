@@ -130,66 +130,49 @@
     margin-left: auto; /* Aligns value to the right */
     margin-right: 140px;
 }
+/* Transaction Actions Container */
+.transaction-actions {
+    display: flex;
+    justify-content: space-between; /* Align buttons on the same line */
+    gap: 10px; /* Add spacing between buttons */
+    margin-top: 20px; /* Add some spacing above */
+}
 
-/* Cancel Transaction Button */
-.cancel-transaction-button {
-    width: 100%; /* Full width */
+/* Cancel Transaction, Pay Later, and Complete Transaction Buttons */
+.transaction-actions .cancel-transaction-button,
+.transaction-actions .pay-later-button,
+.transaction-actions .complete-transaction-button {
+    flex: 1; /* Equal width for all buttons */
     padding: 12px;
-    margin-top: 10px;
-    margin-bottom: 10px; /* Add spacing below */
     color: #fff;
     border: none;
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #dc3545; /* Red color */
     transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center; /* Center text inside the button */
 }
 
-.cancel-transaction-button:hover {
+/* Cancel Transaction Button */
+.transaction-actions .cancel-transaction-button {
+    background-color: #dc3545; /* Red color */
+}
+
+.transaction-actions .cancel-transaction-button:hover {
     background-color: #c82333; /* Darker red on hover */
     transform: translateY(-2px); /* Subtle hover effect */
 }
 
-/* Transaction Actions Container */
-.transaction-actions {
-    display: flex;
-    justify-content: space-between; /* Space evenly between buttons */
-    gap: 10px; /* Add spacing between buttons */
-}
-
-/* Pay Later and Complete Transaction Buttons */
-.pay-later-button,
-.complete-transaction-button {
-    flex: 1; /* Equal width for both buttons */
-    padding: 12px;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-/* Pay Later Button */
-.pay-later-button {
-    background-color: #007bff; /* Gray color for Pay Later */
-}
-
-.pay-later-button:hover {
-    background-color: #0056b3; /* Darker gray on hover */
-    transform: translateY(-2px);
-}
-
 /* Complete Transaction Button */
-.complete-transaction-button {
+.transaction-actions .complete-transaction-button {
     background-color: #007bff; /* Blue color */
 }
 
-.complete-transaction-button:hover {
+.transaction-actions .complete-transaction-button:hover {
     background-color: #0056b3; /* Darker blue on hover */
     transform: translateY(-2px);
 }
+
 
 /* Container for the product search and suggestions */
 .product-search-container {
@@ -399,4 +382,165 @@
 .fill-max-button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+/* Status Selection Section */
+.pay-later-section {
+    margin-top: 20px; /* Add spacing above the section */
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    gap: 10px; /* Space between the dropdown and label */
+}
+
+/* Label for the Status Dropdown */
+.status-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Status Dropdown */
+.status-dropdown {
+    width: 100%; /* Full width */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.status-dropdown:focus {
+    border-color: #1AA488; /* Green border on focus */
+    box-shadow: 0 0 5px rgba(26, 164, 136, 0.5); /* Green glow */
+    outline: none;
+}
+
+/* Label for Customer Selection Dropdown */
+.customer-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Customer Dropdown */
+.customer-dropdown {
+    width: 50%; /* Full width */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    display: none; /* Hidden by default; toggled dynamically */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.customer-dropdown:focus {
+    border-color: #1AA488; /* Green border on focus */
+    box-shadow: 0 0 5px rgba(26, 164, 136, 0.5); /* Green glow */
+    outline: none;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000; /* Ensure it appears above other elements */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dim background for focus effect */
+    display: flex; /* Flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    padding-top: 100px;
+    padding-left: 36%;
+}
+
+.modal-content {
+    background: #ffffff; /* White background for the modal */
+    padding: 20px; /* Padding inside the modal */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    width: 400px; /* Fixed width */
+    max-width: 90%; /* Prevent modal from overflowing on small screens */
+    position: relative; /* For placing the close button */
+    text-align: center; /* Center-align content inside the modal */
+    animation: fadeIn 0.3s ease-out; /* Add fade-in animation */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.close-button {
+    position: absolute; /* Position relative to modal content */
+    top: 10px; /* Spacing from top */
+    right: 10px; /* Spacing from right */
+    color: #aaa; /* Light gray color */
+    font-size: 20px; /* Slightly larger font size */
+    cursor: pointer; /* Pointer cursor for interactivity */
+    transition: color 0.3s ease; /* Smooth hover transition */
+}
+
+.close-button:hover {
+    color: #333; /* Darker gray on hover */
+}
+
+.submit-button {
+    background-color: #1AA488; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Comfortable padding */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Slightly rounded corners */
+    cursor: pointer; /* Pointer cursor for interactivity */
+    transition: background-color 0.3s; /* Smooth hover transition */
+}
+
+.submit-button:hover {
+    background-color: #136f5d; /* Darker green on hover */
+}
+
+/* Input field styles inside the modal */
+.modal-content input[type="text"],
+.modal-content input[type="email"] {
+    width: 100%; /* Full width of modal content */
+    padding: 10px; /* Padding for comfortable typing */
+    margin: 10px 0; /* Space between inputs */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; /* Slightly rounded corners */
+    box-sizing: border-box; /* Include padding in width calculation */
+    font-size: 14px; /* Consistent font size */
+}
+
+.modal-content label {
+    display: block; /* Ensure labels are on their own line */
+    margin-bottom: 5px; /* Space between label and input */
+    font-weight: bold; /* Bold text for labels */
+    color: #333; /* Dark gray text */
+}
+
+.create-customer-button {
+    background-color: #e0e0e0; /* Subtle gray color */
+    width: 50%;
+    color: #333; /* Darker text for contrast */
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center; /* Center text inside the button */
+}
+
+.create-customer-button:hover {
+    background-color: #bdbdbd; /* Slightly darker gray on hover */
+    transform: translateY(-2px); /* Subtle hover effect */
 }

@@ -5,6 +5,8 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Sum
 from ProductManagement_APP.models import Product, ProductVersion
 from .models import Transaction, TransactionItem
+from Debt_Management.models import Customer  # Import Customer model
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
 
@@ -49,8 +51,9 @@ def pos_view(request):
 
     cart = request.session.get('cart', [])
     total = sum(item['quantity'] * item['price'] for item in cart)
+    customers = Customer.objects.all()  # Pass customers for "Pay Later"
 
-    return render(request, "pos/pos.html", {"cart": cart, "total": total})
+    return render(request, "pos/pos.html", {"cart": cart, "total": total, "customers": customers})
 
 def complete_transaction(request):
     cart = request.session.get('cart', [])
@@ -58,8 +61,19 @@ def complete_transaction(request):
         messages.error(request, "Your cart is empty.")
         return redirect('POS_APP:pos')
 
+    status = request.POST.get('status', 'Paid')
+    customer_id = request.POST.get('customer_id')
+
+    customer = None
+    if status == 'Pay Later':
+        # Validate customer
+        if not customer_id:
+            messages.error(request, "Customer must be selected for 'Pay Later' transactions.")
+            return redirect('POS_APP:pos')
+        customer = get_object_or_404(Customer, id=customer_id)
+
     # Create a new transaction
-    transaction = Transaction.objects.create()
+    transaction = Transaction.objects.create(status=status, customer=customer)
 
     for item in cart:
         product_version = ProductVersion.objects.get(id=item['product_version_id'])
@@ -186,6 +200,8 @@ def transaction_details(request, transaction_id):
         "id": transaction.id,
         "date": transaction.date.strftime("%Y-%m-%d %H:%M"),
         "total_price": float(transaction.total_price),
-        "items": items
+        "items": items,
+        "customer": transaction.customer.get_full_name() if transaction.customer else None,
+        "status": transaction.status
     }
     return JsonResponse(data)

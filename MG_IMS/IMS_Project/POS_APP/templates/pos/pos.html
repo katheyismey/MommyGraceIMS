@@ -21,43 +21,32 @@
         <br>
         <form method="post">
             {% csrf_token %}
-
-            <!-- Wrapper for the inputs -->
             <div class="content-wrapper">
                 <!-- Product Search Field -->
                 <div class="product-search-container">
                     <input type="text" id="product-search" placeholder="Search for a product..." autocomplete="off">
-                    <!-- Hidden field for selected product ID -->
                     <input type="hidden" name="product_id" id="selected-product-id">
-                    <!-- Suggestions Box -->
                     <div id="product-suggestions" class="suggestions"></div>
                 </div>
-
                 <!-- Batch Selection Field -->
                 <div class="batch-search-container">
                     <input type="text" id="batch-search" placeholder="Select batch version..." autocomplete="off" disabled>
-                    <!-- Hidden field for selected batch ID -->
                     <input type="hidden" name="product_version_id" id="selected-batch-id">
-                    <!-- Suggestions Box -->
                     <div id="batch-suggestions" class="suggestions"></div>
                 </div>
-
-                <!-- Quantity Field Below Batch Search -->
+                <!-- Quantity Field -->
                 <div class="quantity-container">
                     <div class="quantity-row">
                         <input type="number" name="quantity_sold" id="quantity-sold" placeholder="Add quantity" min="1" disabled>
-                        <!-- New button to fill max quantity -->
                         <button type="button" id="fill-max-button" class="fill-max-button" disabled>Max</button>
                     </div>
                 </div>
             </div>
-
-            <!-- Add to Cart Button -->
             <button type="submit" class="add-to-cart-button" disabled>Add to Cart</button>
         </form>
     </div>
 
-    <!-- Right Side: Current Transaction (Cart) -->
+    <!-- Right Side: Current Transaction -->
     <div class="pos-right">
         <div class="transaction-header">
             <h2>Current Transaction</h2>
@@ -108,15 +97,113 @@
 
         <form method="post" action="{% url 'POS_APP:complete_transaction' %}">
             {% csrf_token %}
-            <!-- Cancel Transaction Button -->
-            <button type="button" class="cancel-transaction-button" onclick="clearCart()">Cancel Transaction</button>
-        
-            <!-- Pay Later and Complete Transaction Buttons -->
+            <!-- Transaction Status Dropdown -->
+            <div class="pay-later-section">
+                <label for="status" class="status-label">Transaction Status:</label>
+                <select name="status" id="status" class="status-dropdown">
+                    <option value="Paid" selected>Paid</option>
+                    <option value="Pay Later">Pay Later</option>
+                </select>
+                <label for="customer_id" id="customer-label" class="customer-label" style="display: none;">Select Customer:</label>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <select name="customer_id" id="customer-select" class="customer-dropdown" style="display: none;">
+                        <option value="">-- Choose a Customer --</option>
+                        {% for customer in customers %}
+                        <option value="{{ customer.id }}">{{ customer.get_full_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" id="create-customer-button" class="create-customer-button" style="display: none;">Create New</button>
+                </div>
+            </div>
+            <!-- Cancel Transaction and Complete Transaction Buttons -->
             <div class="transaction-actions">
-                <button type="submit" class="pay-later-button">Pay Later</button>
+                <button type="button" class="cancel-transaction-button" onclick="clearCart()">Cancel Transaction</button>
                 <button type="submit" class="complete-transaction-button">Complete Transaction</button>
             </div>
         </form>
     </div>
 </div>
+
+<!-- Customer Creation Modal -->
+<div id="create-customer-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeCustomerModal()">&times;</span>
+        <h3>Create New Customer</h3>
+        <form id="create-customer-form">
+            {% csrf_token %}
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" required>
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" required>
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone">
+            <button type="submit" class="submit-button">Create Customer</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const statusDropdown = document.getElementById('status');
+    const customerDropdown = document.getElementById('customer-select');
+    const customerLabel = document.getElementById('customer-label');
+    const createCustomerButton = document.getElementById('create-customer-button');
+    const createCustomerModal = document.getElementById('create-customer-modal');
+    const createCustomerForm = document.getElementById('create-customer-form');
+
+    statusDropdown.addEventListener('change', function() {
+        if (this.value === 'Pay Later') {
+            customerDropdown.style.display = 'block';
+            customerLabel.style.display = 'block';
+            createCustomerButton.style.display = 'block';
+        } else {
+            customerDropdown.style.display = 'none';
+            customerLabel.style.display = 'none';
+            createCustomerButton.style.display = 'none';
+        }
+    });
+
+    createCustomerButton.addEventListener('click', function() {
+        createCustomerModal.style.display = 'block';
+    });
+
+    function closeCustomerModal() {
+        createCustomerModal.style.display = 'none';
+    }
+
+    createCustomerForm.addEventListener('submit', function (e) {
+    e.preventDefault(); // Prevent the default form submission behavior
+
+    const formData = new FormData(createCustomerForm); // Gather form data
+    const data = { // Create an object to hold the form values
+        first_name: formData.get("first_name"),
+        last_name: formData.get("last_name"),
+        phone: formData.get("phone"),
+    };
+
+    // Make the fetch request with the serialized data
+    fetch("/debt_management/create_customer/", {
+        method: "POST",
+        body: JSON.stringify(data), // Serialize data into JSON
+        headers: {
+            "Content-Type": "application/json", // Specify JSON content type
+            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value, // Include CSRF token
+        },
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                const newOption = document.createElement("option");
+                newOption.value = data.customer.id;
+                newOption.textContent = data.customer.full_name;
+                customerDropdown.appendChild(newOption);
+                createCustomerModal.style.display = "none";
+                createCustomerForm.reset();
+            } else {
+                alert(data.error || "An error occurred while creating the customer.");
+            }
+        })
+        .catch((error) => console.error("Error creating customer:", error));
+});
+
+</script>
 {% endblock %}

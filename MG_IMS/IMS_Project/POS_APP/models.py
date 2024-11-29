@@ -1,9 +1,16 @@
 from django.db import models
 from ProductManagement_APP.models import Product, ProductVersion
+from Debt_Management.models import Customer  # Import the Customer model
 
 class Transaction(models.Model):
+    STATUS_CHOICES = [
+        ('Paid', 'Paid'),
+        ('Pay Later', 'Pay Later'),
+    ]
     date = models.DateTimeField(auto_now_add=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Paid')
+    customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.SET_NULL, related_name='transactions')
 
     def calculate_total(self):
         total = sum(item.get_total_price() for item in self.items.all())

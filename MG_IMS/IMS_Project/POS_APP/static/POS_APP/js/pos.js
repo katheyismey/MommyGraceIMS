@@ -263,4 +263,6 @@ function adjustQuantity(productVersionId, delta) {
     function getCsrfToken() {
         return document.querySelector("[name=csrfmiddlewaretoken]").value;
     }
+
+    
 });
