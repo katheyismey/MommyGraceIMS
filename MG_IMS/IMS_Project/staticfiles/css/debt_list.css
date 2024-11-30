@@ -1,0 +1,87 @@
+/* General page styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Table container for styling consistency */
+table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Header row styling */
+table thead tr {
+    background-color: #1AA488;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+table th,
+table td {
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tbody tr:hover {
+    background-color: #e6f7f2; /* Subtle hover effect */
+    transition: background-color 0.3s ease;
+}
+
+table td {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Empty state styling */
+table tbody tr td[colspan="7"] {
+    text-align: center;
+    font-style: italic;
+    color: #aaa;
+    padding: 20px;
+}
+
+/* Status badge styling */
+table td:last-child {
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+table td:last-child:contains("Unpaid") {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+table td:last-child:contains("Partially Paid") {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+table td:last-child:contains("Paid") {
+    background-color: #d4edda;
+    color: #155724;
+}

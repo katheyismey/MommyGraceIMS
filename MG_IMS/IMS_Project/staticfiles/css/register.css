@@ -1,0 +1,122 @@
+
+    /* Basic styling */
+    body, html {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+    }
+
+    .login-container, .register-container {
+        width: 800px;
+        height: 450px; /* Consistent height for both login and register pages */
+        display: flex;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 8px; /* Adding border radius for a smoother look */
+    }
+
+    .left-panel, .right-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .left-panel {
+        background-color: #1BA487;
+        color: white;
+        width: 40%;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+
+    .left-panel img {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 20px;
+    }
+
+    .left-panel h1 {
+        font-size: 24px;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .right-panel {
+        background-color: white;
+        width: 60%;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+    .right-panel h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .right-panel form {
+        width: 100%;
+    }
+
+    .right-panel input[type="text"],
+    .right-panel input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .right-panel input[type="submit"],
+    .right-panel button {
+        width: 100%;
+        padding: 10px;
+        background-color: #333;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .right-panel input[type="submit"]:hover,
+    .right-panel button:hover {
+        background-color: #555;
+    }
+
+    .right-panel a {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .right-panel a:hover {
+        text-decoration: underline;
+    }
+
+    .error-messages {
+        color: red;
+        background-color: #ffe6e6;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        text-align: left;
+    }
+
+    .form-group {
+        text-align: left;
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }

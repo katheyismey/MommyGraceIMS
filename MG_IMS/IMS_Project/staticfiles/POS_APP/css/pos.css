@@ -1,0 +1,546 @@
+/* Enhanced POS styles in pos.css */
+.pos-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f1f1f1;
+}
+
+/* Fixed height for pos-left */
+.pos-left {
+    width: 30%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    height: 55%; /* Fixed height for pos-left */
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between; /* Place h2 on the left and button on the right */
+    align-items: center;
+    margin-bottom: 10px; /* Add some space below the header */
+}
+
+.transaction-header h2 {
+    margin-top: 0; /* Remove default margin for better alignment */
+}
+
+.transaction-records-button {
+    padding: 10px 15px;
+    background-color: #fcfcfc;
+    color: #333333;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+}
+
+.transaction-records-button:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+/* Right panel adjusts height dynamically */
+.pos-right {
+    width: 70%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden; /* Allow scrolling when content exceeds */
+    
+}
+
+.add-to-cart-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #1AA488;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+
+}
+
+.add-to-cart-button:hover {
+    background-color: #136f5d;
+    transform: translateY(-2px);
+}
+
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.transaction-table th, .transaction-table td {
+    padding: 14px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 14px;
+}
+
+.transaction-table th {
+    background-color: #1AA488;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.transaction-table td {
+    background-color: #fbfbfb;
+}
+
+.empty-cart {
+    color: #aaa;
+    text-align: center;
+    font-style: italic;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.total-amount {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 60px;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-label {
+    margin-right: auto; /* Aligns label to the left */
+}
+
+.total-value {
+    margin-left: auto; /* Aligns value to the right */
+    margin-right: 140px;
+}
+/* Transaction Actions Container */
+.transaction-actions {
+    display: flex;
+    justify-content: space-between; /* Align buttons on the same line */
+    gap: 10px; /* Add spacing between buttons */
+    margin-top: 20px; /* Add some spacing above */
+}
+
+/* Cancel Transaction, Pay Later, and Complete Transaction Buttons */
+.transaction-actions .cancel-transaction-button,
+.transaction-actions .pay-later-button,
+.transaction-actions .complete-transaction-button {
+    flex: 1; /* Equal width for all buttons */
+    padding: 12px;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center; /* Center text inside the button */
+}
+
+/* Cancel Transaction Button */
+.transaction-actions .cancel-transaction-button {
+    background-color: #dc3545; /* Red color */
+}
+
+.transaction-actions .cancel-transaction-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+    transform: translateY(-2px); /* Subtle hover effect */
+}
+
+/* Complete Transaction Button */
+.transaction-actions .complete-transaction-button {
+    background-color: #007bff; /* Blue color */
+}
+
+.transaction-actions .complete-transaction-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px);
+}
+
+
+/* Container for the product search and suggestions */
+.product-search-container {
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+#product-search {
+    border: 1px solid #ddd;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.quantity-container {
+    margin-top: 15px;
+    position: relative;
+    margin-bottom: 70px;
+    width: 100%;
+}
+
+#quantity-sold {
+    border: 1px solid #ddd;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.suggestions {
+    border: 1px solid #ddd;
+    margin-top: -1px;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    position: absolute;
+    width: 100%;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.suggestion-item {
+    padding: 14px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.suggestion-item:hover {
+    background-color: #f7f7f7;
+}
+
+#product-search:focus {
+    box-shadow: none;
+    border-color: #ccc;
+}
+
+.quantity-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.quantity-button:hover {
+    background-color: #0056b3;
+}
+
+.remove-button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.remove-button:hover {
+    background-color: #c82333;
+}
+
+.transaction-records-button img {
+    width: 16px; /* Adjust icon size */
+    height: 16px; /* Match width and height */
+}
+
+/* Batch Search Container */
+.batch-search-container {
+    position: relative;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#batch-search {
+    border: 1px solid #ddd;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    background-color: #fff;
+}
+
+/* Batch Suggestions Dropdown */
+#batch-suggestions {
+    border: none;
+    margin-top: -1px;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    position: absolute;
+    width: 100%;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.batch-search-container .suggestion-item {
+    padding: 14px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.batch-search-container .suggestion-item:hover {
+    background-color: #f7f7f7;
+}
+
+#batch-search:focus {
+    box-shadow: none;
+    border-color: #ccc;
+}
+
+/* Additional alignment and spacing adjustments */
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.notice-box {
+    background-color: #ffcccc;
+    color: #990000;
+    border: 1px solid #990000;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notice-box span {
+    flex-grow: 1;
+}
+
+.notice-box button {
+    background-color: transparent;
+    border: none;
+    color: #990000;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.quantity-container {
+    margin-top: 10px;
+}
+
+.quantity-row {
+    display: flex;
+    align-items: center;
+}
+
+#quantity-sold {
+    flex: 1; /* Makes the input box flexible to occupy available space */
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.fill-max-button {
+    padding: 8px 15px;
+    background-color: #1AA488;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.fill-max-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Status Selection Section */
+.pay-later-section {
+    margin-top: 20px; /* Add spacing above the section */
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    gap: 10px; /* Space between the dropdown and label */
+}
+
+/* Label for the Status Dropdown */
+.status-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Status Dropdown */
+.status-dropdown {
+    width: 100%; /* Full width */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.status-dropdown:focus {
+    border-color: #1AA488; /* Green border on focus */
+    box-shadow: 0 0 5px rgba(26, 164, 136, 0.5); /* Green glow */
+    outline: none;
+}
+
+/* Label for Customer Selection Dropdown */
+.customer-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Customer Dropdown */
+.customer-dropdown {
+    width: 50%; /* Full width */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    display: none; /* Hidden by default; toggled dynamically */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.customer-dropdown:focus {
+    border-color: #1AA488; /* Green border on focus */
+    box-shadow: 0 0 5px rgba(26, 164, 136, 0.5); /* Green glow */
+    outline: none;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000; /* Ensure it appears above other elements */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dim background for focus effect */
+    display: flex; /* Flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    padding-top: 100px;
+    padding-left: 36%;
+}
+
+.modal-content {
+    background: #ffffff; /* White background for the modal */
+    padding: 20px; /* Padding inside the modal */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    width: 400px; /* Fixed width */
+    max-width: 90%; /* Prevent modal from overflowing on small screens */
+    position: relative; /* For placing the close button */
+    text-align: center; /* Center-align content inside the modal */
+    animation: fadeIn 0.3s ease-out; /* Add fade-in animation */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.close-button {
+    position: absolute; /* Position relative to modal content */
+    top: 10px; /* Spacing from top */
+    right: 10px; /* Spacing from right */
+    color: #aaa; /* Light gray color */
+    font-size: 20px; /* Slightly larger font size */
+    cursor: pointer; /* Pointer cursor for interactivity */
+    transition: color 0.3s ease; /* Smooth hover transition */
+}
+
+.close-button:hover {
+    color: #333; /* Darker gray on hover */
+}
+
+.submit-button {
+    background-color: #1AA488; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Comfortable padding */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Slightly rounded corners */
+    cursor: pointer; /* Pointer cursor for interactivity */
+    transition: background-color 0.3s; /* Smooth hover transition */
+}
+
+.submit-button:hover {
+    background-color: #136f5d; /* Darker green on hover */
+}
+
+/* Input field styles inside the modal */
+.modal-content input[type="text"],
+.modal-content input[type="email"] {
+    width: 100%; /* Full width of modal content */
+    padding: 10px; /* Padding for comfortable typing */
+    margin: 10px 0; /* Space between inputs */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; /* Slightly rounded corners */
+    box-sizing: border-box; /* Include padding in width calculation */
+    font-size: 14px; /* Consistent font size */
+}
+
+.modal-content label {
+    display: block; /* Ensure labels are on their own line */
+    margin-bottom: 5px; /* Space between label and input */
+    font-weight: bold; /* Bold text for labels */
+    color: #333; /* Dark gray text */
+}
+
+.create-customer-button {
+    background-color: #e0e0e0; /* Subtle gray color */
+    width: 50%;
+    color: #333; /* Darker text for contrast */
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center; /* Center text inside the button */
+}
+
+.create-customer-button:hover {
+    background-color: #bdbdbd; /* Slightly darker gray on hover */
+    transform: translateY(-2px); /* Subtle hover effect */
+}

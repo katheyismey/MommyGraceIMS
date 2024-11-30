@@ -6,6 +6,7 @@ from django.db.models import Sum
 from ProductManagement_APP.models import Product, ProductVersion
 from .models import Transaction, TransactionItem
 from Debt_Management.models import Customer  # Import Customer model
+from Debt_Management.models import Debt
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
@@ -82,10 +83,24 @@ def complete_transaction(request):
     # Calculate the total and save it to the transaction
     transaction.calculate_total()
 
+    # If the transaction is marked as "Pay Later," create a Debt record
+    if status == 'Pay Later' and customer:
+        from datetime import date, timedelta
+
+        Debt.objects.create(
+            customer=customer,
+            transaction=transaction,
+            amount_due=transaction.total_price,
+            amount_paid=0,  # Initially no payment is made
+            due_date=date.today() + timedelta(days=30),  # Example: 30 days from today
+            status='Unpaid'  # Default status
+        )
+
     # Clear the cart
     request.session['cart'] = []
     messages.success(request, "Transaction completed successfully.")
     return redirect('POS_APP:pos')
+
 
 def search_products(request):
     query = request.GET.get('q', '')
