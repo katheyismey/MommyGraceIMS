@@ -14,14 +14,6 @@
         <a href="{% url 'ProductManagement_APP:product_versions' version.product.product_id %}" class="button cancel">Cancel</a>
     </form>
 
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li class="message">{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
     <!-- Display stock-in log -->
     <div class="table-container">
         <h3>Recent Stock In Logs</h3>

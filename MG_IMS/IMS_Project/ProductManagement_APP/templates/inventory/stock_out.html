@@ -14,13 +14,7 @@
         <label for="stock_out_amount">Amount to subtract:</label>
         <input type="number" id="stock_out_amount" name="stock_out_amount" min="1" max="{{ version.product_quantity }}" required>
         
-        {% if messages %}
-            <div class="error-messages">
-                {% for message in messages %}
-                    <p class="error">{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
+       
         
         <button type="submit" class="button delete">Remove Stock</button>
         <a href="{% url 'ProductManagement_APP:product_versions' version.product.product_id %}" class="button cancel">Cancel</a>

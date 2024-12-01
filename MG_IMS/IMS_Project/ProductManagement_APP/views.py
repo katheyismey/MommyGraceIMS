@@ -276,22 +276,3 @@ def add_supplier(request):
         form = SupplierForm()
     return render(request, 'inventory/add_supplier.html', {'form': form})
 
-# Edit supplier
-def edit_supplier(request, supplier_id):
-    supplier = get_object_or_404(Supplier, id=supplier_id)
-    if request.method == 'POST':
-        form = SupplierForm(request.POST, instance=supplier)
-        if form.is_valid():
-            form.save()
-            return redirect('ProductManagement_APP:inventory_list')
-    else:
-        form = SupplierForm(instance=supplier)
-    return render(request, 'inventory/edit_supplier.html', {'form': form})
-
-# Delete supplier
-def delete_supplier(request, supplier_id):
-    supplier = get_object_or_404(Supplier, id=supplier_id)
-    if request.method == "POST":
-        supplier.delete()
-        return redirect('ProductManagement_APP:inventory_list')
-    return render(request, 'inventory/confirm_delete_supplier.html', {'supplier': supplier})
