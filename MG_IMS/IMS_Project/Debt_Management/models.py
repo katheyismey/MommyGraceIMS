@@ -38,20 +38,4 @@ class Debt(models.Model):
     def __str__(self):
         return f"Debt for {self.customer.get_full_name()} - Amount Due: ₱{self.amount_due} - Status: {self.status}"
 
-# Payment Model
-class Payment(models.Model):
-    debt = models.ForeignKey(Debt, on_delete=models.CASCADE, related_name='payments')
-    amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
-    date_paid = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"Payment of ₱{self.amount_paid} for Debt {self.debt.id} on {self.date_paid}"
-
-    def save(self, *args, **kwargs):
-        """Override save method to update the debt status if fully paid."""
-        super().save(*args, **kwargs)
-        # Update the debt's amount_paid and check if it's fully paid
-        self.debt.amount_paid += self.amount_paid
-        if self.debt.amount_paid >= self.debt.amount_due:
-            self.debt.mark_as_paid()  # Mark the debt as 'Paid' when it's fully paid
-        self.debt.save()
