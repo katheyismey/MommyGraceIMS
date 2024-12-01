@@ -79,3 +79,55 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const payAllButton = document.getElementById("payAllButton");
+    const payAllModal = document.getElementById("payAllModal");
+    const payAllForm = document.getElementById("payAllForm");
+    const payAllAmountInput = document.getElementById("payAllAmount");
+    const totalRemainingBalance = document.getElementById("totalRemainingBalance");
+
+    if (payAllButton) {
+        payAllButton.addEventListener("click", () => {
+            payAllModal.style.display = "block";
+        });
+    }
+
+    // Close modal
+    document.querySelector(".close-button").onclick = () => (payAllModal.style.display = "none");
+
+    // Handle form submission
+    payAllForm.addEventListener("submit", async event => {
+        event.preventDefault();
+        const formData = {
+            customer_id: payAllForm.customer_id.value,
+            amount: parseFloat(payAllAmountInput.value).toFixed(2),
+        };
+
+        try {
+            const response = await fetch(`/debt_management/pay_all_debts/`, {
+                method: "POST",
+                body: JSON.stringify(formData),
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+                },
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert(data.message || "Payment successful!");
+                location.reload();
+            } else {
+                alert(data.error || "An error occurred.");
+            }
+        } catch (error) {
+            console.error("Error submitting payment:", error);
+        }
+    });
+
+    // Close modal when clicking outside
+    window.onclick = event => {
+        if (event.target === payAllModal) payAllModal.style.display = "none";
+    };
+});
