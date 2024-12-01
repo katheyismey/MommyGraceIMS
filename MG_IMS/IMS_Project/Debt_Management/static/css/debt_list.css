@@ -197,3 +197,82 @@ table td:last-child:contains("Paid") {
 .submit-button:hover {
     background-color: #136f5d;
 }
+
+.pagination {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.pagination-link {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 8px 16px;
+    background-color: #1AA488;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-link:hover {
+    background-color: #136f5d;
+}
+
+.pagination span {
+    font-size: 16px;
+    color: #555;
+    margin: 0 10px;
+}
+
+/* Search container styling */
+/* Left-aligned search container styling */
+.search-container-left {
+    margin: 10px 55px 20px; /* Add spacing below the h2 tag */
+}
+
+.search-container-left form {
+    display: flex;
+    gap: 10px; /* Add spacing between inputs and buttons */
+    align-items: center; /* Vertically align the items */
+}
+
+/* Keep the existing styles for inputs and buttons */
+.search-container-left input[type="text"] {
+    width: 200px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.search-container-left .search-button {
+    background-color: #1AA488;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-container-left .search-button:hover {
+    background-color: #136f5d;
+}
+
+.search-container-left .clear-button {
+    background-color: #f44336;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-container-left .clear-button:hover {
+    background-color: #c62828;
+}
