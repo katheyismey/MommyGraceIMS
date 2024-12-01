@@ -11,6 +11,18 @@
 
 {% block content %}
 <h2>Debt Records</h2>
+
+<!-- Search form -->
+<div class="search-container-left">
+    <form method="get" action="{% url 'Debt_Management:debt_list' %}">
+        <input type="text" name="query" placeholder="Search by customer name..." value="{{ query }}">
+        <button type="submit" class="search-button">Search</button>
+        {% if query %}
+        <a href="{% url 'Debt_Management:debt_list' %}" class="clear-button">Clear</a>
+        {% endif %}
+    </form>
+</div>
+
 <table>
     <thead>
         <tr>
@@ -56,6 +68,17 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- Pagination links -->
+<div class="pagination">
+    {% if debts.has_previous %}
+        <a href="?page={{ debts.previous_page_number }}" class="pagination-link">Previous</a>
+    {% endif %}
+    <span>Page {{ debts.number }} of {{ debts.paginator.num_pages }}</span>
+    {% if debts.has_next %}
+        <a href="?page={{ debts.next_page_number }}" class="pagination-link">Next</a>
+    {% endif %}
+</div>
 
 <!-- Modal -->
 <div id="payDebtModal" class="modal" style="display: none;">
