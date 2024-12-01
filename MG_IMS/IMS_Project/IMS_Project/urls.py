@@ -16,5 +16,5 @@ urlpatterns = [
     path('sales-summary/', views.sales_summary, name='sales_summary'),
     path('inventory/', include('ProductManagement_APP.urls')),  # Include inventory app's URL patterns
     path('expenses/', include('ExpensesTracker_APP.urls')),  # Project-level route
-    
+    path('debt_management/', include('Debt_Management.urls')),
 ]

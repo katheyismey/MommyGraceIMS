@@ -1,0 +1,374 @@
+/* General Reset and Body Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #f5f5f5;
+    margin: 0;
+}
+
+/* Content Area Styling */
+.content {
+    flex: 1;
+    padding: 40px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e6ed;
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Inventory Container Styling */
+.inventory-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+.category-actions, .product-actions, .search-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.search-bar input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex: 1;
+}
+
+/* Button Styles */
+.button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #5cb6a4; /* Set button background color */
+    color: #FFF; /* Set button text color */
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #128a6f; /* Darker shade on hover */
+}
+
+/* Dropdown and Label Styles */
+label {
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px; /* Space between label and dropdown */
+}
+
+#category_select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+/* Change border color on focus */
+#category_select:focus {
+    border-color: #1AA488;
+    outline: none;
+}
+
+/* Specific Button Styles */
+.add-category,.add-supplier,
+.add-product  {
+    background-color: #4CAF50;; /* Match the general button style */
+    color: #FFF;
+}
+
+.edit-category, .edit-product {
+    background-color: #FFC107;
+    color: #fff;
+}
+
+.delete-category, .delete-product {
+    background-color: #f44336;
+    color: #fff;
+}
+
+.stock-in {
+    background-color: #4CAF50;
+    
+}
+
+.stock-out {
+    background-color: #f44336;
+}
+
+/* Product Table Styling */
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product-table th, .product-table td {
+    padding: 15px;
+    border: 1px solid #e0e6ed;
+    text-align: left;
+}
+
+.product-table th {
+    background-color: #056e59; /* Table header background color */
+    font-weight: bold;
+    color: #FFF;
+}
+
+.product-table tr:hover {
+    background-color: #92f0dd;
+}
+
+/* Differentiated Row Styling */
+.product-row {
+    background-color: #97c9bf; /* Light green for product rows */
+}
+
+/* Low Stock Highlight */
+.low-stock {
+    background-color: #ffcccc;
+    color: #a00;
+    font-weight: bold;
+}
+
+/* Product Version Row Styling */
+.product-version-row {
+    background-color: #f9f9f9;
+}
+
+.product-version-row .indented {
+    padding-left: 20px;
+    font-style: italic;
+    color: #555;
+}
+
+/* Form and Input Styling */
+.form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form input[type="text"],
+.form input[type="number"],
+.form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.save {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.cancel {
+    background-color: #bbb;
+}
+
+.delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+/* Product Version Header Row Styling */
+.version-header-row th {
+    background-color: #04ad8c; /* Blue background for version headers */
+    color: #ffffff; /* White text */
+    font-weight: bold;
+}
+
+/* Edit and Delete Buttons for Product Versions */
+.button.edit-version {
+    background-color: #ffc107; /* Yellow background for edit buttons */
+    color: #fff;
+}
+
+.button.delete-version {
+    background-color: #f44336; /* Red background for delete buttons */
+    color: #fff;
+}
+
+.supplier-actions {
+    margin-bottom: 20px; /* Adds space below the supplier section */
+}
+
+.add-supplier,
+.add-product {
+    margin-bottom: 10px; /* Adds space around buttons */
+}
+
+/* Versions Container Styling */
+.versions-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Version Table Styling */
+.version-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.version-table th,
+.version-table td {
+    padding: 15px;
+    border: 1px solid #e0e6ed;
+    text-align: left;
+}
+
+.version-table th {
+    background-color: #03a583; /* Header background color */
+    font-weight: bold;
+    color: #FFF; /* White text for headers */
+}
+
+.version-table tr:hover {
+    background-color: #c3f7e9; /* Light hover effect */
+}
+
+/* Differentiated Version Row Styling */
+.version-row {
+    background-color: #e0f7f3; /* Light greenish-blue for version rows */
+}
+
+/* Table Style */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.table thead {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table th {
+    background-color: #398659;
+    color: white;
+}
+
+.table td {
+    font-size: 14px;
+}
+
+.table .no-data {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+
+/* Optional: Add some spacing between the tables */
+.table-container {
+    margin: 30px 0;
+}
+
+
+/* Indented Version Details */
+.version-row .indented {
+    padding-left: 20px;
+    font-style: italic;
+    color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        padding: 20px;
+    }
+
+    .inventory-container {
+        padding: 0 10px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    .product-table th, .product-table td {
+        padding: 10px;
+    }
+
+    .product-version-row .indented {
+        padding-left: 10px;
+    }
+
+    .versions-container {
+        padding: 10px;
+    }
+
+    .version-table th,
+    .version-table td {
+        padding: 10px;
+    }
+
+    .version-row .indented {
+        padding-left: 10px;
+    }
+}

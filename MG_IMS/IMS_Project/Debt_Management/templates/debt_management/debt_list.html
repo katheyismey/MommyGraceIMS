@@ -1,0 +1,83 @@
+{% extends 'MGSariSari_Inventory/base.html' %}
+
+{% load static %}
+
+{% block title %}Debt List{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/debt_list.css' %}">
+    <script src="{% static 'js/debt_list.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<h2>Debt Records</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Transaction ID</th>
+            <th>Amount Due</th>
+            <th>Amount Paid</th>
+            <th>Remaining Balance</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for debt in debts %}
+        <tr data-debt-id="{{ debt.id }}" data-remaining="{{ debt.remaining_balance }}">
+            <td>{{ debt.customer.get_full_name }}</td>
+            <td>{{ debt.transaction.id }}</td>
+            <td>₱{{ debt.amount_due }}</td>
+            <td>₱{{ debt.amount_paid }}</td>
+            <td>₱{{ debt.remaining_balance }}</td>
+            <td>{{ debt.due_date }}</td>
+            <td>{{ debt.status }}</td>
+            <td>
+                {% if debt.status != 'Paid' %}
+                    <button class="pay-debt-button"
+                        data-debt-id="{{ debt.id }}"
+                        data-customer-name="{{ debt.customer.get_full_name }}"
+                        data-transaction-id="{{ debt.transaction.id }}"
+                        data-amount-due="{{ debt.amount_due }}"
+                        data-remaining="{{ debt.remaining_balance }}">
+                        Pay Debt
+                    </button>
+                {% else %}
+                    <span class="paid-badge">Paid</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8">No debt records found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div id="payDebtModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h3>Pay Debt</h3>
+        <div>
+            <strong>Customer Name:</strong> <span id="modalCustomerName"></span>
+        </div>
+        <div>
+            <strong>Transaction ID:</strong> <span id="modalTransactionId"></span>
+        </div>
+        <div>
+            <strong>Amount Due:</strong> ₱<span id="modalAmountDue"></span>
+        </div>
+        <form id="payDebtForm">
+            {% csrf_token %}
+            <label for="amount">Amount to Pay:</label>
+            <input type="number" id="amount" name="amount" min="1" step="0.01" required>
+            <input type="hidden" id="debtId" name="debt_id">
+            <button type="submit" class="submit-button">Submit Payment</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
