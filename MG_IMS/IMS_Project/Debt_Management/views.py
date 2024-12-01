@@ -83,10 +83,11 @@ def debt_list_view(request):
                 Q(customer__last_name__icontains=" ".join(query_parts[1:]))
             )
 
-        # Check if all debts belong to a single customer
+        # Check if all debts belong to a single customer and if there are unpaid debts
         if debts.exists():
             unique_customers = debts.values('customer_id').distinct().count()
-            if unique_customers == 1:  # Ensure there's only one customer
+            unpaid_debts_exist = debts.filter(status__in=['Unpaid', 'Partially Paid']).exists()
+            if unique_customers == 1 and unpaid_debts_exist:  # Ensure there's only one customer with unpaid debts
                 first_debt = debts.first()
                 customer_id = first_debt.customer.id
                 customer_name = first_debt.customer.get_full_name()  # Get the customer's full name
@@ -117,9 +118,6 @@ def debt_list_view(request):
             'total_remaining_balance': total_remaining_balance
         }
     )
-
-
-
 
 @csrf_exempt
 @transaction.atomic

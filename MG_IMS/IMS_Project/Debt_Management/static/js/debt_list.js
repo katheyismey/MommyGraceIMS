@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalCustomerName = document.getElementById("modalCustomerName");
     const modalTransactionId = document.getElementById("modalTransactionId");
     const modalAmountDue = document.getElementById("modalAmountDue");
+    const modalRemainingBalance = document.getElementById("modalRemainingBalance"); // Add reference for Remaining Balance
 
     // Open modal when "Pay Debt" button is clicked
     document.querySelectorAll(".pay-debt-button").forEach(button => {
@@ -17,15 +18,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const transactionId = button.dataset.transactionId;
             const amountDue = button.dataset.amountDue;
             const remaining = parseFloat(button.dataset.remaining);
-
+    
             // Populate modal fields
             debtIdInput.value = debtId;
             modalCustomerName.textContent = customerName;
             modalTransactionId.textContent = transactionId;
-            modalAmountDue.textContent = amountDue;
+            modalAmountDue.textContent = `${parseFloat(amountDue).toFixed(2)}`; // Proper template literal usage
+            modalRemainingBalance.textContent = `₱${remaining.toFixed(2)}`; // Proper template literal usage
             amountInput.max = remaining; // Set max to remaining balance
             amountInput.value = ""; // Reset value
-
+    
             modal.style.display = "block";
         });
     });
@@ -63,7 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
             const data = await response.json();
             if (data.success) {
-                alert("Payment successful!");
                 location.reload();
             } else {
                 alert(data.error || "An error occurred.");
@@ -72,6 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error submitting payment:", error);
         }
     });
+
     // Close modal when clicking outside content
     window.onclick = event => {
         if (event.target === modal) {
@@ -79,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 });
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const payAllButton = document.getElementById("payAllButton");
@@ -116,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json();
             if (data.success) {
-                alert(data.message || "Payment successful!");
                 location.reload();
             } else {
                 alert(data.error || "An error occurred.");

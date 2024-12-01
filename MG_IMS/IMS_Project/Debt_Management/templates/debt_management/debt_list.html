@@ -19,9 +19,7 @@
         <div class="search-clear-container">
             <input type="text" name="query" placeholder="Search by customer name..." value="{{ query }}">
             <button type="submit" class="search-button">Search</button>
-            {% if query %}
             <a href="{% url 'Debt_Management:debt_list' %}" class="clear-button">Clear</a>
-            {% endif %}
         </div>
     </form>
 
@@ -55,7 +53,11 @@
             <td>{{ debt.transaction.id }}</td>
             <td>₱{{ debt.amount_due }}</td>
             <td>₱{{ debt.amount_paid }}</td>
-            <td>₱{{ debt.remaining_balance }}</td>
+            <td>{% if debt.remaining_balance > 0 %}
+                <span style="color: red;">₱{{ debt.remaining_balance }}</span>
+            {% else %}
+                ₱{{ debt.remaining_balance }}
+            {% endif %}</td>
             <td>{{ debt.due_date }}</td>
             <td>{{ debt.status }}</td>
             <td>
@@ -101,7 +103,8 @@
             <strong>Customer Name:</strong> <span id="payAllCustomerName">{{ customer_name }}</span>
         </div>
         <div>
-            <strong>Total Remaining Balance:</strong> ₱<span id="totalRemainingBalance">{{ total_remaining_balance }}</span>
+            <strong>Total Remaining Balance:</strong> 
+            <span id="totalRemainingBalance" class="remaining-balance">₱{{ total_remaining_balance }}</span>
         </div>
         <form id="payAllForm">
             {% csrf_token %}
@@ -126,6 +129,9 @@
         </div>
         <div>
             <strong>Amount Due:</strong> ₱<span id="modalAmountDue"></span>
+        </div>
+        <div>
+            <strong>Remaining Balance:</strong> <span id="modalRemainingBalance" class="remaining-balance"></span>
         </div>
         <form id="payDebtForm">
             {% csrf_token %}

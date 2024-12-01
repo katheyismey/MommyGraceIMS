@@ -79,8 +79,8 @@ table tbody tr td[colspan="8"] {
 
 /* Button styles */
 .pay-debt-button {
-    padding: 10px 20px;
-    background-color: #1AA488;
+    padding: 7.5px 20px;
+    background-color: #f44336;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -90,7 +90,7 @@ table tbody tr td[colspan="8"] {
 }
 
 .pay-debt-button:hover {
-    background-color: #136f5d;
+    background-color: #c62828;
     transform: translateY(-2px);
 }
 
@@ -283,4 +283,8 @@ table tbody tr td[colspan="8"] {
 
 .pay-all-button:hover {
     background-color: #c62828;
+}
+
+.remaining-balance {
+    color: red;
 }
