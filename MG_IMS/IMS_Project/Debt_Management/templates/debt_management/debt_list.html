@@ -12,15 +12,25 @@
 {% block content %}
 <h2>Debt Records</h2>
 
-<!-- Search form -->
-<div class="search-container-left">
+<!-- Search form and Actions -->
+<div class="search-actions-container">
+    <!-- Search and clear buttons -->
     <form method="get" action="{% url 'Debt_Management:debt_list' %}">
-        <input type="text" name="query" placeholder="Search by customer name..." value="{{ query }}">
-        <button type="submit" class="search-button">Search</button>
-        {% if query %}
-        <a href="{% url 'Debt_Management:debt_list' %}" class="clear-button">Clear</a>
-        {% endif %}
+        <div class="search-clear-container">
+            <input type="text" name="query" placeholder="Search by customer name..." value="{{ query }}">
+            <button type="submit" class="search-button">Search</button>
+            <a href="{% url 'Debt_Management:debt_list' %}" class="clear-button">Clear</a>
+        </div>
     </form>
+
+    <!-- Pay All Debts button -->
+    {% if customer_id %}
+    <button id="payAllButton" class="pay-all-button"
+        data-customer-id="{{ customer_id }}"
+        data-total-remaining-balance="{{ total_remaining_balance }}">
+        Pay All Debts
+    </button>
+    {% endif %}
 </div>
 
 <table>
@@ -43,7 +53,11 @@
             <td>{{ debt.transaction.id }}</td>
             <td>₱{{ debt.amount_due }}</td>
             <td>₱{{ debt.amount_paid }}</td>
-            <td>₱{{ debt.remaining_balance }}</td>
+            <td>{% if debt.remaining_balance > 0 %}
+                <span style="color: red;">₱{{ debt.remaining_balance }}</span>
+            {% else %}
+                ₱{{ debt.remaining_balance }}
+            {% endif %}</td>
             <td>{{ debt.due_date }}</td>
             <td>{{ debt.status }}</td>
             <td>
@@ -80,7 +94,29 @@
     {% endif %}
 </div>
 
-<!-- Modal -->
+<!-- Pay All Modal -->
+<div id="payAllModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h3>Pay All Debts</h3>
+        <div>
+            <strong>Customer Name:</strong> <span id="payAllCustomerName">{{ customer_name }}</span>
+        </div>
+        <div>
+            <strong>Total Remaining Balance:</strong> 
+            <span id="totalRemainingBalance" class="remaining-balance">₱{{ total_remaining_balance }}</span>
+        </div>
+        <form id="payAllForm">
+            {% csrf_token %}
+            <label for="payAllAmount">Amount to Pay:</label>
+            <input type="number" id="payAllAmount" name="amount" min="1" step="0.01" required>
+            <input type="hidden" id="payAllCustomerId" name="customer_id" value="{{ customer_id }}">
+            <button type="submit" class="submit-button">Submit Payment</button>
+        </form>
+    </div>
+</div>
+
+<!-- Pay Debt Modal -->
 <div id="payDebtModal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close-button" onclick="closeModal()">&times;</span>
@@ -93,6 +129,9 @@
         </div>
         <div>
             <strong>Amount Due:</strong> ₱<span id="modalAmountDue"></span>
+        </div>
+        <div>
+            <strong>Remaining Balance:</strong> <span id="modalRemainingBalance" class="remaining-balance"></span>
         </div>
         <form id="payDebtForm">
             {% csrf_token %}

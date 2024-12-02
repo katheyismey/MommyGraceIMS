@@ -4,20 +4,31 @@ body {
     background-color: #f7f7f7;
     margin: 0;
     padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrollbars */
 }
 
 h2 {
     font-size: 28px;
     color: #333;
     text-align: left;
-    margin: 30px 20px 20px 20px;
+    margin: 20px 10px;
     font-weight: bold;
-    padding-left: 35px;
+    padding-left: 5%;
+    max-width: 90%; /* Prevent h2 from overflowing */
+    box-sizing: border-box;
+}
+
+/* Universal box-sizing for consistent dimensions */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
 /* Table container for styling consistency */
 table {
     width: 90%;
+    max-width: 100%;
     margin: 20px auto;
     border-collapse: collapse;
     background-color: #fff;
@@ -37,7 +48,7 @@ table thead tr {
 table th,
 table td {
     text-align: center;
-    padding: 15px;
+    padding: 10px;
     font-size: 14px;
     border: 1px solid #ddd;
     vertical-align: middle;
@@ -48,13 +59,14 @@ table tbody tr:nth-child(even) {
 }
 
 table tbody tr:hover {
-    background-color: #e6f7f2; /* Subtle hover effect */
+    background-color: #e6f7f2;
     transition: background-color 0.3s ease;
 }
 
 table td {
     font-size: 14px;
     color: #333;
+    word-wrap: break-word; /* Prevent long words from causing overflow */
 }
 
 /* Empty state styling */
@@ -65,32 +77,10 @@ table tbody tr td[colspan="8"] {
     padding: 20px;
 }
 
-/* Status badge styling */
-table td:last-child {
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 4px;
-}
-
-table td:last-child:contains("Unpaid") {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-table td:last-child:contains("Partially Paid") {
-    background-color: #fff3cd;
-    color: #856404;
-}
-
-table td:last-child:contains("Paid") {
-    background-color: #d4edda;
-    color: #155724;
-}
-
 /* Button styles */
 .pay-debt-button {
-    padding: 10px 20px;
-    background-color: #1AA488;
+    padding: 7.5px 20px;
+    background-color: #f44336;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -100,7 +90,7 @@ table td:last-child:contains("Paid") {
 }
 
 .pay-debt-button:hover {
-    background-color: #136f5d;
+    background-color: #c62828;
     transform: translateY(-2px);
 }
 
@@ -223,21 +213,23 @@ table td:last-child:contains("Paid") {
     color: #555;
     margin: 0 10px;
 }
-
-/* Search container styling */
-/* Left-aligned search container styling */
-.search-container-left {
-    margin: 10px 55px 20px; /* Add spacing below the h2 tag */
+/* Search and Actions container styling */
+.search-actions-container {
+    display: flex;
+    justify-content: space-between; /* Distributes space between search and actions */
+    align-items: center; /* Aligns items vertically */
+    margin: 10px 55px 20px; /* Adjust spacing */
 }
 
-.search-container-left form {
+/* Left-aligned search and clear container */
+.search-clear-container {
     display: flex;
     gap: 10px; /* Add spacing between inputs and buttons */
     align-items: center; /* Vertically align the items */
 }
 
-/* Keep the existing styles for inputs and buttons */
-.search-container-left input[type="text"] {
+/* Styles for inputs and buttons in search-clear-container */
+.search-clear-container input[type="text"] {
     width: 200px;
     padding: 8px 12px;
     border: 1px solid #ccc;
@@ -245,7 +237,7 @@ table td:last-child:contains("Paid") {
     font-size: 14px;
 }
 
-.search-container-left .search-button {
+.search-clear-container .search-button {
     background-color: #1AA488;
     color: #fff;
     padding: 8px 16px;
@@ -256,11 +248,11 @@ table td:last-child:contains("Paid") {
     transition: background-color 0.3s ease;
 }
 
-.search-container-left .search-button:hover {
+.search-clear-container .search-button:hover {
     background-color: #136f5d;
 }
 
-.search-container-left .clear-button {
+.search-clear-container .clear-button {
     background-color: #f44336;
     color: #fff;
     padding: 8px 16px;
@@ -273,6 +265,26 @@ table td:last-child:contains("Paid") {
     transition: background-color 0.3s ease;
 }
 
-.search-container-left .clear-button:hover {
+.search-clear-container .clear-button:hover {
     background-color: #c62828;
+}
+
+/* Styling for the 'Pay All Debts' button */
+.pay-all-button {
+    background-color: #f44336;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.pay-all-button:hover {
+    background-color: #c62828;
+}
+
+.remaining-balance {
+    color: red;
 }

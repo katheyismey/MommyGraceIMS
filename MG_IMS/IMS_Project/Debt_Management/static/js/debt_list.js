@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalCustomerName = document.getElementById("modalCustomerName");
     const modalTransactionId = document.getElementById("modalTransactionId");
     const modalAmountDue = document.getElementById("modalAmountDue");
+    const modalRemainingBalance = document.getElementById("modalRemainingBalance"); // Add reference for Remaining Balance
 
     // Open modal when "Pay Debt" button is clicked
     document.querySelectorAll(".pay-debt-button").forEach(button => {
@@ -17,15 +18,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const transactionId = button.dataset.transactionId;
             const amountDue = button.dataset.amountDue;
             const remaining = parseFloat(button.dataset.remaining);
-
+    
             // Populate modal fields
             debtIdInput.value = debtId;
             modalCustomerName.textContent = customerName;
             modalTransactionId.textContent = transactionId;
-            modalAmountDue.textContent = amountDue;
+            modalAmountDue.textContent = `${parseFloat(amountDue).toFixed(2)}`; // Proper template literal usage
+            modalRemainingBalance.textContent = `₱${remaining.toFixed(2)}`; // Proper template literal usage
             amountInput.max = remaining; // Set max to remaining balance
             amountInput.value = ""; // Reset value
-
+    
             modal.style.display = "block";
         });
     });
@@ -63,7 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
             const data = await response.json();
             if (data.success) {
-                alert("Payment successful!");
                 location.reload();
             } else {
                 alert(data.error || "An error occurred.");
@@ -72,10 +73,63 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error submitting payment:", error);
         }
     });
+
     // Close modal when clicking outside content
     window.onclick = event => {
         if (event.target === modal) {
             closeModal();
         }
+    };
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const payAllButton = document.getElementById("payAllButton");
+    const payAllModal = document.getElementById("payAllModal");
+    const payAllForm = document.getElementById("payAllForm");
+    const payAllAmountInput = document.getElementById("payAllAmount");
+    const totalRemainingBalance = document.getElementById("totalRemainingBalance");
+
+    if (payAllButton) {
+        payAllButton.addEventListener("click", () => {
+            payAllModal.style.display = "block";
+        });
+    }
+
+    // Close modal
+    document.querySelector(".close-button").onclick = () => (payAllModal.style.display = "none");
+
+    // Handle form submission
+    payAllForm.addEventListener("submit", async event => {
+        event.preventDefault();
+        const formData = {
+            customer_id: payAllForm.customer_id.value,
+            amount: parseFloat(payAllAmountInput.value).toFixed(2),
+        };
+
+        try {
+            const response = await fetch(`/debt_management/pay_all_debts/`, {
+                method: "POST",
+                body: JSON.stringify(formData),
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+                },
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.error || "An error occurred.");
+            }
+        } catch (error) {
+            console.error("Error submitting payment:", error);
+        }
+    });
+
+    // Close modal when clicking outside
+    window.onclick = event => {
+        if (event.target === payAllModal) payAllModal.style.display = "none";
     };
 });
