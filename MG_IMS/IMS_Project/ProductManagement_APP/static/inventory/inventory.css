@@ -134,13 +134,13 @@ label {
 }
 
 .product-table th {
-    background-color: #056e59; /* Table header background color */
+    background-color: #1AA488; /* Table header background color */
     font-weight: bold;
     color: #FFF;
 }
 
 .product-table tr:hover {
-    background-color: #92f0dd;
+    background-color: #E6F7F2;
 }
 
 /* Differentiated Row Styling */
@@ -273,7 +273,7 @@ label {
 }
 
 .version-table tr:hover {
-    background-color: #c3f7e9; /* Light hover effect */
+    background-color: #E6F7F2; /* Light hover effect */
 }
 
 /* Differentiated Version Row Styling */
